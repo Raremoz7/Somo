@@ -9,10 +9,10 @@ export function FadeInImage({ className, containerClassName, alt, ...props }: Fa
   const [isLoaded, setIsLoaded] = useState(false);
 
   return (
-    <div className={`relative overflow-hidden bg-gray-200 ${containerClassName || ""}`}>
+    <div className={`relative overflow-hidden bg-[#0a0a0a] ${containerClassName || ""}`}>
       {/* Skeleton Loading State */}
       {!isLoaded && (
-        <div className="absolute inset-0 bg-gray-200 animate-pulse z-10" />
+        <div className="absolute inset-0 bg-[#141414] animate-pulse z-10" />
       )}
       
       <motion.img

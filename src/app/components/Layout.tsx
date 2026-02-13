@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useOutlet } from "react-router";
-import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence, useScroll, useSpring } from "motion/react";
+import { PageTransitionProvider, usePageTransition } from "./PageTransitionContext";
+import svgLogoSimplified from "../../imports/svg-f0leoh9j40";
 
 // SVG Paths from the design
 const svgPaths = {
@@ -14,10 +15,11 @@ const svgPaths = {
 
 const navLinks = [
   { label: "HOME", path: "/" },
-  { label: "SERVIÇOS", path: "/servicos", children: [
+  { label: "SERVICOS", path: "/servicos", children: [
     { label: "Web", path: "/web" },
     { label: "Social", path: "/social" },
-    { label: "Vídeos", path: "/videos" },
+    { label: "Videos", path: "/videos" },
+    { label: "CRM", path: "/crm" },
   ]},
   { label: "SISTEMAS", path: "/crm" },
   { label: "SOBRE", path: "/sobre" },
@@ -32,14 +34,22 @@ const socialIcons = [
 ];
 
 export default function Layout() {
-  const [mobileOpen, setMobileOpen] = useState(false);
+  return (
+    <PageTransitionProvider>
+      <LayoutInner />
+    </PageTransitionProvider>
+  );
+}
+
+function LayoutInner() {
   const [servicesOpen, setServicesOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
   const currentOutlet = useOutlet();
+  const { isTransitioning } = usePageTransition();
 
   // Pages with Dark Hero (initially white text)
-  const hasDarkHero = ["/", "/social", "/videos", "/portfolio", "/servicos"].includes(location.pathname);
+  const hasDarkHero = ["/", "/social", "/videos", "/portfolio", "/servicos", "/web", "/crm", "/sobre", "/contato"].includes(location.pathname);
 
   // Scroll to top on route change
   useEffect(() => {
@@ -49,26 +59,19 @@ export default function Layout() {
   // Scroll listener
   useEffect(() => {
     const handleScroll = () => {
-      // If page has a dark hero, only switch color when scrolling past the viewport height (roughly)
-      // Otherwise, switch immediately after a small scroll
       const threshold = hasDarkHero ? window.innerHeight - 100 : 50;
       setIsScrolled(window.scrollY > threshold);
     };
     
-    // Check on mount/update
     handleScroll();
     
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [hasDarkHero]);
 
-  // Determine standard color based on page type and scroll state
-  // On Dark Hero pages: White/Gray at top, #78787D when scrolled
-  // On Light Hero pages: Always #78787D
   const isLightMode = !hasDarkHero || isScrolled;
-  // Always gray for inactive items. Lighter gray on dark backgrounds for visibility.
   const standardColor = isLightMode ? "#78787D" : "#9CA3AF"; 
-  const logoColor = "#d7f20d"; // Always lime
+  const logoColor = "#d7f20d";
 
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
@@ -78,7 +81,7 @@ export default function Layout() {
   });
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[#0a0a0a]">
       {/* Scroll Progress Bar */}
       <motion.div
         className="fixed top-0 left-0 right-0 h-1 bg-[#d7f20d] origin-left z-[60]"
@@ -87,56 +90,37 @@ export default function Layout() {
       
       {/* Navigation */}
       <nav 
-        className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-[800px] rounded-[60px] border px-4 py-2 md:py-3 md:px-6 transition-all duration-300 backdrop-blur-[15px] bg-[rgba(255,255,255,0.03)] shadow-[0px_8px_24px_0px_rgba(0,0,0,0.5)] border-white/10"
+        className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-auto max-w-[95%] rounded-[60px] border px-3 py-2 md:py-3 md:px-6 transition-all duration-300 backdrop-blur-[15px] bg-[rgba(255,255,255,0.03)] shadow-[0px_8px_24px_0px_rgba(0,0,0,0.5)] border-white/10"
       >
-        <div className="flex items-center justify-between md:justify-start h-8 relative">
+        <div className="flex items-center justify-center gap-2 md:gap-3 h-8 relative">
           
-          {/* Mobile: Logo Left */}
-          <Link to="/" className="md:hidden flex items-center justify-center text-[#d7f20d]">
-             <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-               <path d={svgPaths.home} fill="currentColor" />
-             </svg>
-          </Link>
-
-          {/* Desktop: Icon Cluster */}
-          <div className="hidden md:flex items-center gap-5 lg:gap-8 mr-5 lg:mr-8 relative flex-shrink-0">
-             {/* Home Icon with Backdrop */}
-             <div className="relative flex items-center justify-center">
-                 <div className={`absolute inset-[-10px] rounded-2xl transition-colors ${isLightMode ? "bg-black/5" : "bg-white/10"}`} />
-                 <Link 
-                    to="/" 
-                    className="relative z-10 hover:scale-110 transition-transform"
-                    style={{ color: location.pathname === "/" ? "#d7f20d" : standardColor }}
+          {/* SOMO Simplified Logo - All Sizes */}
+          <div className="flex items-center mr-0.5 md:mr-1 relative flex-shrink-0">
+             <Link
+               to="/"
+               className="relative z-10 flex items-center group hover:scale-105 transition-transform"
+             >
+               <div className="relative flex items-center justify-center">
+                 <div className={`absolute inset-[-6px] rounded-xl transition-colors ${isLightMode ? "bg-black/5" : "bg-white/10"}`} />
+                 <svg
+                   viewBox="0 0 703.19 389.95"
+                   className="relative z-10 w-[20px] h-[20px] md:w-[24px] md:h-[24px] rotate-[135deg] transition-all group-hover:drop-shadow-[0_0_8px_rgba(215,242,13,0.5)]"
+                   fill="none"
                  >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                      <path d={svgPaths.home} fill="currentColor" />
-                    </svg>
-                 </Link>
-             </div>
-
-             {/* Other Icons - Decorative (Ghost) */}
-             <div className="flex items-center gap-5 lg:gap-8 opacity-40 transition-colors" style={{ color: standardColor }}>
-                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d={svgPaths.icon2} fill="currentColor" />
+                   <path
+                     d={svgLogoSimplified.p3d1bf00}
+                     fill="#d7f20d"
+                     stroke="#d7f20d"
+                     strokeMiterlimit="10"
+                     strokeWidth="35.43"
+                   />
                  </svg>
-                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d={svgPaths.icon3} fill="currentColor" />
-                 </svg>
-                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d={svgPaths.icon4} fill="currentColor" />
-                 </svg>
-             </div>
-
-             {/* Mail Icon - Functional */}
-             <Link to="/sobre" className="transition-colors hover:scale-110" style={{ color: standardColor }}>
-                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d={svgPaths.mail} fill="currentColor" opacity="0.4" />
-                 </svg>
+               </div>
              </Link>
           </div>
 
-          {/* Desktop Nav Links */}
-          <div className="hidden md:flex items-center gap-4 lg:gap-6 md:ml-auto whitespace-nowrap">
+          {/* Nav Links - All Sizes */}
+          <div className="flex items-center gap-2 md:gap-3 lg:gap-5 whitespace-nowrap">
             {navLinks.map((link) => (
               <div key={link.label} className="relative group">
                 {link.children ? (
@@ -148,7 +132,7 @@ export default function Layout() {
                     <div className="relative">
                         <Link
                         to={link.path}
-                        className="font-['Audiowide',cursive] text-[13px] lg:text-[14px] tracking-wide transition-colors relative z-10"
+                        className="font-['Audiowide',cursive] text-[11px] md:text-[13px] lg:text-[14px] tracking-wide transition-colors relative z-10"
                         style={{ color: servicesOpen || location.pathname.startsWith(link.path) ? "#d7f20d" : standardColor }}
                         >
                         {link.label}
@@ -207,7 +191,7 @@ export default function Layout() {
                   <div className="relative">
                     <Link
                         to={link.path}
-                        className="font-['Audiowide',cursive] text-[13px] lg:text-[14px] tracking-wide transition-colors relative z-10"
+                        className="font-['Audiowide',cursive] text-[11px] md:text-[13px] lg:text-[14px] tracking-wide transition-colors relative z-10"
                         style={{ color: location.pathname === link.path ? "#d7f20d" : standardColor }}
                     >
                         {link.label}
@@ -224,60 +208,7 @@ export default function Layout() {
               </div>
             ))}
           </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden text-[#d7f20d]"
-            onClick={() => setMobileOpen(!mobileOpen)}
-          >
-            {mobileOpen ? (
-              <X size={24} />
-            ) : (
-              <Menu size={24} />
-            )}
-          </button>
         </div>
-
-        {/* Mobile Menu */}
-        <AnimatePresence>
-            {mobileOpen && (
-            <motion.div 
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                className="md:hidden overflow-hidden"
-            >
-                <div className="border-t border-[#78787D]/10 mt-4 pt-4 pb-2 flex flex-col gap-4">
-                {navLinks.map((link) => (
-                    <div key={link.label}>
-                    <Link
-                        to={link.path}
-                        className="font-['Audiowide',cursive] text-[16px] tracking-wide block py-1"
-                        style={{ color: "#78787D" }}
-                        onClick={() => setMobileOpen(false)}
-                    >
-                        {link.label}
-                    </Link>
-                    {link.children && (
-                        <div className="ml-4 mt-2 flex flex-col gap-3 border-l border-[#78787D]/20 pl-4">
-                        {link.children.map((child) => (
-                            <Link
-                            key={child.path}
-                            to={child.path}
-                            className="text-[14px] font-['Audiowide',cursive] text-[#78787D]/70 hover:text-[#d7f20d]"
-                            onClick={() => setMobileOpen(false)}
-                            >
-                            {child.label}
-                            </Link>
-                        ))}
-                        </div>
-                    )}
-                    </div>
-                ))}
-                </div>
-            </motion.div>
-            )}
-        </AnimatePresence>
       </nav>
 
       {/* Main Content with Page Transitions */}
@@ -285,12 +216,12 @@ export default function Layout() {
         <AnimatePresence mode="wait">
           <motion.div
             key={location.pathname}
-            initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
+            initial={isTransitioning ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0, y: 20, filter: "blur(8px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             exit={{ opacity: 0, y: -20, filter: "blur(8px)" }}
             transition={{ 
-                duration: 0.5, 
-                ease: [0.25, 0.1, 0.25, 1.0] // Curva mais suave e natural
+                duration: isTransitioning ? 0.1 : 0.5, 
+                ease: [0.25, 0.1, 0.25, 1.0]
             }}
             className="min-h-screen"
           >
@@ -311,7 +242,7 @@ export default function Layout() {
                 </div>
                 <span className="font-['Audiowide',cursive] text-[18px]">SOMO</span>
               </div>
-              <p className="text-white/50 text-[14px] mb-4 font-['Geist',sans-serif]">Parceiros digitais para o seu negócio crescer.</p>
+              <p className="text-white/50 text-[14px] mb-4 font-['Geist',sans-serif]">Parceiros digitais para o seu negocio crescer.</p>
               <div className="flex gap-2">
                 {socialIcons.map((icon) => (
                   <a key={icon.name} href={icon.href} className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#d7f20d]/30 transition-colors">
@@ -330,7 +261,7 @@ export default function Layout() {
             <div>
               <h4 className="font-['Audiowide',cursive] text-[14px] text-[#d7f20d] mb-4 uppercase">Quick Links</h4>
               <div className="flex flex-col gap-2">
-                {["Home", "Serviços", "Portfolio", "Sobre"].map((item) => (
+                {["Home", "Servicos", "Portfolio", "Sobre"].map((item) => (
                   <a key={item} href="#" className="text-white/60 text-[14px] hover:text-white transition-colors font-['Geist',sans-serif]">{item}</a>
                 ))}
               </div>
@@ -338,9 +269,9 @@ export default function Layout() {
 
             {/* All Pages */}
             <div>
-              <h4 className="font-['Audiowide',cursive] text-[14px] text-[#d7f20d] mb-4 uppercase">Páginas</h4>
+              <h4 className="font-['Audiowide',cursive] text-[14px] text-[#d7f20d] mb-4 uppercase">Paginas</h4>
               <div className="flex flex-col gap-2">
-                {["Web", "Social", "CRM", "Vídeos", "Portfolio"].map((item) => (
+                {["Web", "Social", "CRM", "Videos", "Portfolio"].map((item) => (
                   <a key={item} href="#" className="text-white/60 text-[14px] hover:text-white transition-colors font-['Geist',sans-serif]">{item}</a>
                 ))}
               </div>
@@ -350,7 +281,7 @@ export default function Layout() {
             <div>
               <h4 className="font-['Audiowide',cursive] text-[14px] text-[#d7f20d] mb-4 uppercase">Contato</h4>
               <p className="text-white/60 text-[14px] font-['Geist',sans-serif]">hello@somo.io</p>
-              <p className="text-white/60 text-[14px] mt-2 font-['Geist',sans-serif]">São Paulo, Brasil</p>
+              <p className="text-white/60 text-[14px] mt-2 font-['Geist',sans-serif]">Sao Paulo, Brasil</p>
             </div>
           </div>
 
