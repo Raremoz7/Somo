@@ -1,22 +1,58 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
-import { ArrowRight, ChevronDown, ChevronUp, TrendingUp, Users, Heart, BarChart, Play, Zap, MessageCircle } from "lucide-react";
+import { ArrowRight, ChevronDown, ChevronUp, TrendingUp, Users, Heart, BarChart, Play, Zap, MessageCircle, Check, Instagram, Youtube } from "lucide-react";
 import { FadeInImage } from "./ui/FadeInImage";
 import { TiltCard } from "./ui/TiltCard";
 import svgLogoSimplified from "../../imports/svg-f0leoh9j40";
+import { ImageWithFallback } from "./figma/ImageWithFallback";
 
 const imgHero = "https://images.unsplash.com/photo-1745848413099-13adc3aaf308?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzb2NpYWwlMjBtZWRpYSUyMHN0cmF0ZWd5JTIwcGhvbmUlMjBkYXJrJTIwbW9vZHl8ZW58MXx8fHwxNzcxMDE1NjUwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral";
 
 const caseStudies = [
-  { brand: "Beauty Brand", title: "Escalando uma marca de beleza com Reels", metric1: { value: "91K", label: "Visualizações" }, metric2: { value: "165%", label: "Engajamento" } },
-  { brand: "Fashion Brand", title: "Crescendo uma marca de roupas com vídeo", metric1: { value: "18K", label: "Seguidores" }, metric2: { value: "93%", label: "Engajamento" } },
+  { 
+    brand: "Beauty Brand", 
+    title: "Escalando uma marca de beleza com Reels", 
+    image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=800&q=80",
+    metric1: { value: "91K", label: "Visualizações" }, 
+    metric2: { value: "165%", label: "Engajamento" },
+    metric3: { value: "4.2K", label: "Novos Seguidores" }
+  },
+  { 
+    brand: "Fashion Brand", 
+    title: "Crescendo uma marca de roupas com vídeo", 
+    image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=80",
+    metric1: { value: "18K", label: "Seguidores" }, 
+    metric2: { value: "93%", label: "Engajamento" },
+    metric3: { value: "12.5K", label: "Alcance Médio" }
+  },
+];
+
+const services = [
+  { 
+    title: "Criação de Conteúdo", 
+    icon: Users,
+    description: "Posts, Reels, Stories e TikToks que param o scroll.",
+    image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=600&q=80"
+  },
+  { 
+    title: "Gestão de Redes", 
+    icon: MessageCircle,
+    description: "Curadoria, comunidade e respostas em tempo real.",
+    image: "https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=600&q=80"
+  },
+  { 
+    title: "Mídia Paga", 
+    icon: TrendingUp,
+    description: "Anúncios estratégicos que convertem e escalam.",
+    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&q=80"
+  },
 ];
 
 const processSteps = [
-  { icon: TrendingUp, title: "Estratégia Primeiro", description: "Definimos o caminho certo antes de criar o primeiro post. Análise de público e concorrência." },
-  { icon: Zap, title: "Criação e Gestão", description: "Produzimos conteúdo que conecta e gerenciamos sua comunidade com voz ativa." },
-  { icon: BarChart, title: "Análise e Refinamento", description: "Monitoramos métricas em tempo real para ajustar a rota e maximizar o ROI." },
+  { icon: TrendingUp, title: "Diagnóstico & Norte", description: "Definimos o caminho certo antes de criar o primeiro post. Análise de público e concorrência." },
+  { icon: Zap, title: "Produção & Curadoria", description: "Produzimos conteúdo que conecta e gerenciamos sua comunidade com voz ativa." },
+  { icon: BarChart, title: "Análise & Otimização", description: "Monitoramos métricas em tempo real para ajustar a rota e maximizar o ROI." },
 ];
 
 const faqs = [
@@ -47,7 +83,7 @@ export default function SocialPage() {
   }, [handleMouseMove]);
 
   return (
-    <div className="overflow-hidden bg-[#0a0a0a]">
+    <div className="relative overflow-hidden bg-[#0a0a0a]" style={{ position: 'relative' }}>
       {/* Parallax Grid */}
       <motion.div className="hidden md:block fixed inset-0 pointer-events-none z-0 overflow-hidden" style={{ x: parallaxBgX, y: parallaxBgY }}>
         <div className="absolute inset-[-60px] opacity-[0.025]" style={{ backgroundImage: `linear-gradient(rgba(215,242,13,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(215,242,13,0.3) 1px, transparent 1px)`, backgroundSize: "80px 80px" }} />
@@ -108,11 +144,7 @@ export default function SocialPage() {
             </h2>
           </motion.div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              { title: "Criação de Conteúdo", icon: Users },
-              { title: "Gestão de Redes", icon: MessageCircle },
-              { title: "Mídia Paga", icon: TrendingUp },
-            ].map((service, index) => (
+            {services.map((service, index) => (
               <TiltCard key={service.title} tiltMaxX={8} tiltMaxY={8} scale={1.02}>
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1, duration: 0.5 }}
                   className="backdrop-blur-xl bg-white/[0.03] border border-white/10 rounded-2xl p-8 h-full relative overflow-hidden group hover:border-[#d7f20d]/30 transition-colors">
@@ -121,6 +153,7 @@ export default function SocialPage() {
                     <service.icon size={24} className="text-[#d7f20d]" />
                   </div>
                   <h3 className="font-['Audiowide',cursive] text-white text-[16px] uppercase">{service.title}</h3>
+                  <p className="text-white/40 font-['Geist',sans-serif] text-[14px] mt-4 leading-relaxed">{service.description}</p>
                 </motion.div>
               </TiltCard>
             ))}
@@ -161,6 +194,10 @@ export default function SocialPage() {
                   <div>
                     <div className="font-['Audiowide',cursive] text-[36px] text-[#d7f20d]">{study.metric2.value}</div>
                     <p className="text-white/40 text-[13px] uppercase tracking-wide font-['Geist',sans-serif]">{study.metric2.label}</p>
+                  </div>
+                  <div>
+                    <div className="font-['Audiowide',cursive] text-[36px] text-[#d7f20d]">{study.metric3.value}</div>
+                    <p className="text-white/40 text-[13px] uppercase tracking-wide font-['Geist',sans-serif]">{study.metric3.label}</p>
                   </div>
                 </div>
               </div>
@@ -205,7 +242,7 @@ export default function SocialPage() {
             <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#d7f20d]/50 to-transparent" />
             <Heart size={48} className="mx-auto text-[#d7f20d] fill-[#d7f20d] mb-6 opacity-60" />
             <blockquote className="font-['Audiowide',cursive] text-white text-[clamp(20px,3vw,32px)] leading-relaxed uppercase">
-              "Eles assumiram completamente nossas redes sociais e nossa audiência nunca esteve tão engajada."
+              "A SOMO não postou para nós. Eles encontraram a nossa voz e transformaram nossa audiência em clientes fiéis."
             </blockquote>
           </motion.div>
         </TiltCard>
@@ -281,7 +318,7 @@ export default function SocialPage() {
             Deixe-nos transformar suas redes sociais em máquinas de engajamento e resultado.
           </p>
           <motion.div className="relative inline-block">
-            <motion.div className="absolute -inset-[3px] rounded-2xl border-2 border-[#d7f20d]/40" animate={{ borderColor: ["rgba(215,242,13,0.2)", "rgba(215,242,13,0.6)", "rgba(215,242,13,0.2)"], scale: [1, 1.03, 1] }} transition={{ duration: 2, repeat: Infinity }} />
+            <motion.div className="absolute -inset-[3px] rounded-2xl border-2 border-[#d7f20d]" animate={{ opacity: [0.2, 0.6, 0.2], scale: [1, 1.03, 1] }} transition={{ duration: 2, repeat: Infinity }} />
             <Link to="/contato" className="relative inline-flex items-center gap-3 bg-[#d7f20d] text-[#0a0a0a] px-10 py-5 rounded-xl font-['Audiowide',cursive] text-[15px] uppercase tracking-wide hover:bg-[#c5e00c] transition-all shadow-lg shadow-[#d7f20d]/20 hover:shadow-[#d7f20d]/40 hover:-translate-y-1 transform group">
               Começar Agora
               <motion.span animate={{ x: [0, 4, 0] }} transition={{ duration: 1.5, repeat: Infinity }}><ArrowRight size={20} /></motion.span>

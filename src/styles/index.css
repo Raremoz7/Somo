@@ -1,3 +1,12 @@
 @import './fonts.css';
 @import './tailwind.css';
 @import './theme.css';
+
+/* Ensure proper scroll container positioning for Motion useScroll */
+html {
+  position: relative;
+}
+
+body {
+  position: relative;
+}

@@ -1,337 +1,1303 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router";
-import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
-import { ArrowRight, ChevronDown, ChevronUp, Zap, Users, BarChart3, Shield, Mail, CheckCircle2 } from "lucide-react";
-import { FadeInImage } from "./ui/FadeInImage";
-import { TiltCard } from "./ui/TiltCard";
-import svgLogoSimplified from "../../imports/svg-f0leoh9j40";
+import { FullscreenParticles } from "./ParticlesCanvas";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useSpring,
+  useInView,
+} from "motion/react";
+import {
+  ArrowRight,
+  Code2,
+  Smartphone,
+  Monitor,
+  Layers,
+  Zap,
+  Lightbulb,
+  Rocket,
+  CheckCircle,
+  Cog,
+  Users,
+  BarChart3,
+  Shield,
+  Cloud,
+  Database,
+  Cpu,
+  Globe,
+  Lock,
+  Settings,
+  TrendingUp,
+  Award,
+  Target,
+  Sparkles,
+} from "lucide-react";
+import { ImageWithFallback } from "./figma/ImageWithFallback";
 
-import imgCrmDashboard from "figma:asset/6871e18d7a249f689d20813af07c3a6c6b7a9098.png";
-import imgCrmFeature1 from "figma:asset/2f8ef4523a1a6da9f60a0c61d41601723e3952bb.png";
-import imgSuccessStory1 from "figma:asset/e36b0ae4bfed573ff0366d55c4de282a2b9e9698.png";
-import imgSuccessStory2 from "figma:asset/506fd929ca3b4751630b5e9c533f27dccbfa1a34.png";
-import imgSuccessStory3 from "figma:asset/7672c223687e5d04ac8ed3b36d56d1c83e869d30.png";
-import imgSuccessStory4 from "figma:asset/6c420b7382aeaabcd7fba160df8867dc6de1fbe2.png";
-import imgBrand1 from "figma:asset/7f977e741252bf43fee344d1d5b2194f9ec9d7b8.png";
-import imgBrand2 from "figma:asset/aea5cfb2c7f7feb465b28ed428c96691dbc3c807.png";
-import imgBrand3 from "figma:asset/978dff97fe050ed18cfaa1289cffe963edc19473.png";
-import imgBrand4 from "figma:asset/333a3064eb4d1f23864e03df144f992a744b5143.png";
+// ─── IMAGENS ───
+const imgHero =
+  "https://images.unsplash.com/photo-1719400471588-575b23e27bd7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkZXZlbG9wZXIlMjBjb2RpbmclMjBzY3JlZW4lMjB3b3Jrc3BhY2UlMjBkYXJrfGVufDF8fHx8MTc3MTYxMTkxOHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral";
+const imgMobileApp =
+  "https://images.unsplash.com/photo-1762341119237-98df67c9c3c9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2JpbGUlMjBhcHAlMjBkZXZlbG9wbWVudCUyMHBob25lJTIwc2NyZWVufGVufDF8fHx8MTc3MTU2Njg2NXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral";
+const imgArchitecture =
+  "https://images.unsplash.com/photo-1753715613388-7e03410b1dce?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzb2Z0d2FyZSUyMGFyY2hpdGVjdHVyZSUyMGRpYWdyYW0lMjBwbGFubmluZ3xlbnwxfHx8fDE3NzE2MTE5MTh8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral";
+const imgTeamCollab =
+  "https://images.unsplash.com/photo-1532619675605-1ede6c2ed2b0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0ZWFtJTIwY29sbGFib3JhdGlvbiUyMHdoaXRlYm9hcmQlMjBpZGVhc3xlbnwxfHx8fDE3NzE2MTE5MTl8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral";
 
-const imgHero = "https://images.unsplash.com/photo-1759661966728-4a02e3c6ed91?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGFuYWx5dGljcyUyMGRhdGElMjBkYXNoYm9hcmQlMjB0ZWNobm9sb2d5fGVufDF8fHx8MTc3MTAxNTY1M3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral";
-
-const features = [
-  { icon: Zap, title: "Configuração fácil", description: "Configure em minutos. Interface intuitiva para toda sua equipe começar rápido." },
-  { icon: Users, title: "Colabore", description: "Acesso centralizado para times e clientes em um só lugar." },
-  { icon: BarChart3, title: "Acompanhe o crescimento", description: "Acompanhe métricas e KPIs em tempo real com dashboards inteligentes." },
-];
-
-const detailedFeatures = [
-  { title: "Automação", description: "Automatize tarefas repetitivas e foque no que importa." },
-  { title: "Relatórios", description: "Dashboards completos com métricas acionáveis." },
-  { title: "Integrações", description: "Conecte com as ferramentas que você já usa." },
-  { title: "Multiusuário", description: "Acesse de qualquer dispositivo, a qualquer hora." },
-];
-
-const successStories = [
-  { image: imgSuccessStory1, brand: imgBrand1, name: "FVK.", description: "Aumentou sua taxa de conversão em 340% nos primeiros 6 meses." },
-  { image: imgSuccessStory2, brand: imgBrand2, name: "Florabell", description: "Reduziu o tempo de resposta ao cliente em 75%." },
-  { image: imgSuccessStory3, brand: imgBrand3, name: "Sustenta", description: "Triplicou a base de clientes em 1 ano com o CRM." },
-  { image: imgSuccessStory4, brand: imgBrand4, name: "MindTech", description: "Automatizou 90% dos processos de vendas." },
-];
-
-const pricingPlans = [
-  { name: "Inicial (Starter)", price: "R$ 120", period: "/mês", features: ["1 usuário", "500 contatos", "Funil básico", "Email"], highlighted: true },
-  { name: "Pro", price: "R$ 247", period: "/mês", features: ["5 usuários", "5.000 contatos", "Automações", "API", "Relatórios"], highlighted: false },
-  { name: "Enterprise", price: "Custom", period: "", features: ["Ilimitado", "Integrações", "Suporte 24/7", "SLA", "Onboarding"], highlighted: false },
-];
-
-const faqs = [
-  { question: "Para que tipo de empresa serve o CRM?", answer: "Trabalhamos com empresas de todos os tamanhos, desde startups até grandes corporações. Nosso CRM é flexível e escalável." },
-  { question: "O preço inclui mais usuários?", answer: "Sim! Cada plano inclui 1 usuário e você pode adicionar mais por um custo adicional por usuário." },
-  { question: "Vocês oferecem integrações personalizadas?", answer: "Sim, oferecemos integrações personalizadas via API para conectar com seus sistemas existentes." },
-  { question: "Posso migrar meus dados de outro CRM?", answer: "Absolutamente! Oferecemos migração assistida e gratuita de qualquer outro CRM." },
-];
-
-export default function CrmPage() {
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
-
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const smoothMouseX = useSpring(mouseX, { stiffness: 40, damping: 25, restDelta: 0.001 });
-  const smoothMouseY = useSpring(mouseY, { stiffness: 40, damping: 25, restDelta: 0.001 });
-  const parallaxBgX = useTransform(smoothMouseX, [-1, 1], [-25, 25]);
-  const parallaxBgY = useTransform(smoothMouseY, [-1, 1], [-15, 15]);
-
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    mouseX.set((e.clientX / window.innerWidth) * 2 - 1);
-    mouseY.set((e.clientY / window.innerHeight) * 2 - 1);
-  }, [mouseX, mouseY]);
-
-  useEffect(() => {
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [handleMouseMove]);
+// ─── EFEITO 1: Floating Code Particles ───
+function FloatingCodeParticles() {
+  const particles = [
+    { code: "</>" },
+    { code: "{}" },
+    { code: "( )" },
+    { code: "[ ]" },
+    { code: "fn()" },
+    { code: "=>" },
+    { code: "&&" },
+    { code: "||" },
+  ];
 
   return (
-    <div className="overflow-hidden bg-[#0a0a0a]">
-      {/* Parallax Grid */}
-      <motion.div className="hidden md:block fixed inset-0 pointer-events-none z-0 overflow-hidden" style={{ x: parallaxBgX, y: parallaxBgY }}>
-        <div className="absolute inset-[-60px] opacity-[0.025]" style={{ backgroundImage: `linear-gradient(rgba(215,242,13,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(215,242,13,0.3) 1px, transparent 1px)`, backgroundSize: "80px 80px" }} />
-        <div className="absolute top-[20%] left-[10%] w-[400px] h-[400px] rounded-full bg-[#d7f20d]/[0.012] blur-[100px]" />
-        <div className="absolute top-[60%] right-[10%] w-[350px] h-[350px] rounded-full bg-[#d7f20d]/[0.015] blur-[120px]" />
+    <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-20">
+      {particles.map((particle, i) => (
+        <motion.div
+          key={i}
+          className="absolute text-[#d7f20d] font-mono text-2xl font-bold"
+          initial={{
+            x: `${Math.random() * 100}%`,
+            y: `${Math.random() * 100}%`,
+            opacity: 0.3,
+          }}
+          animate={{
+            x: `${Math.random() * 100}%`,
+            y: `${Math.random() * 100}%`,
+            opacity: [0.3, 0.6, 0.3],
+          }}
+          transition={{
+            duration: 20 + Math.random() * 10,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+        >
+          {particle.code}
+        </motion.div>
+      ))}
+    </div>
+  );
+}
+
+// ─── EFEITO 2: Paper to Digital Animation ───
+function PaperToDigital() {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, amount: 0.3 });
+  const [step, setStep] = useState(0);
+
+  useEffect(() => {
+    if (!isInView) return;
+
+    const interval = setInterval(() => {
+      setStep((prev) => (prev + 1) % 4);
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [isInView]);
+
+  const steps = [
+    { icon: Lightbulb, label: "Ideia no Papel", color: "#fff" },
+    { icon: Code2, label: "Desenvolvimento", color: "#d7f20d" },
+    { icon: Cog, label: "Testes & QA", color: "#d7f20d" },
+    { icon: Rocket, label: "Sistema Real", color: "#00ff00" },
+  ];
+
+  return (
+    <div
+      ref={ref}
+      className="relative flex items-center justify-between gap-4"
+    >
+      {steps.map((s, i) => {
+        const StepIcon = s.icon;
+        const isActive = i <= step;
+        const isCurrent = i === step;
+
+        return (
+          <div key={i} className="relative flex-1">
+            {/* Connecting line */}
+            {i < steps.length - 1 && (
+              <div className="absolute top-1/2 left-[calc(50%+30px)] right-[-50%] h-0.5 bg-white/10 z-0">
+                <motion.div
+                  className="h-full bg-[#d7f20d]"
+                  initial={{ width: "0%" }}
+                  animate={{ width: i < step ? "100%" : "0%" }}
+                  transition={{ duration: 0.5 }}
+                />
+              </div>
+            )}
+
+            {/* Step circle */}
+            <motion.div
+              animate={{
+                scale: isCurrent
+                  ? [1, 1.3, 1]
+                  : isActive
+                    ? 1.1
+                    : 1,
+                backgroundColor: isActive
+                  ? "rgba(215, 242, 13, 0.2)"
+                  : "rgba(255, 255, 255, 0.05)",
+              }}
+              transition={{ duration: 0.5 }}
+              className={`relative z-10 mx-auto w-16 h-16 rounded-full flex items-center justify-center border-2 ${
+                isActive
+                  ? "border-[#d7f20d]"
+                  : "border-white/20"
+              }`}
+            >
+              <StepIcon
+                size={28}
+                style={{
+                  color: isActive ? s.color : "#ffffff40",
+                }}
+              />
+            </motion.div>
+
+            <p
+              className={`text-center mt-3 text-xs font-['Audiowide',cursive] transition-colors ${
+                isActive ? "text-white" : "text-white/40"
+              }`}
+            >
+              {s.label}
+            </p>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// ─── EFEITO 3: System Type Cards with Hover Effect ───
+function SystemTypeCard({
+  system,
+  delay,
+}: {
+  system: any;
+  delay: number;
+}) {
+  const [isHovered, setIsHovered] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true });
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 50 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, delay }}
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+      className="relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-8 hover:border-[#d7f20d]/30 transition-all overflow-hidden group"
+    >
+      <motion.div className="absolute inset-0 bg-gradient-to-br from-[#d7f20d]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+
+      <motion.div
+        animate={{ rotate: isHovered ? [0, 360] : 0 }}
+        transition={{ duration: 0.6 }}
+        className="relative z-10 w-16 h-16 rounded-2xl bg-[#d7f20d]/10 flex items-center justify-center mb-6 group-hover:bg-[#d7f20d]/20 transition-colors"
+      >
+        <system.icon size={32} className="text-[#d7f20d]" />
       </motion.div>
 
-      {/* ─── HERO ─── */}
-      <section className="relative min-h-screen flex items-end overflow-hidden">
+      <h3 className="relative z-10 text-white font-['Audiowide',cursive] text-xl mb-3">
+        {system.title}
+      </h3>
+      <p className="relative z-10 text-white/60 text-sm leading-relaxed mb-4">
+        {system.description}
+      </p>
+
+      <ul className="relative z-10 space-y-2">
+        {system.features.map((feature: string, i: number) => (
+          <li
+            key={i}
+            className="flex items-center gap-2 text-white/50 text-xs"
+          >
+            <CheckCircle
+              size={14}
+              className="text-[#d7f20d] flex-shrink-0"
+            />
+            {feature}
+          </li>
+        ))}
+      </ul>
+    </motion.div>
+  );
+}
+
+// ─── EFEITO 4: Live Development Timeline ───
+function DevelopmentTimeline() {
+  const [currentPhase, setCurrentPhase] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: false });
+
+  const phases = [
+    {
+      title: "Briefing & Planejamento",
+      duration: "1-2 semanas",
+      icon: Target,
+    },
+    {
+      title: "Design & Prototipação",
+      duration: "2-3 semanas",
+      icon: Layers,
+    },
+    {
+      title: "Desenvolvimento",
+      duration: "4-8 semanas",
+      icon: Code2,
+    },
+    {
+      title: "Testes & QA",
+      duration: "1-2 semanas",
+      icon: Shield,
+    },
+    {
+      title: "Deploy & Lançamento",
+      duration: "1 semana",
+      icon: Rocket,
+    },
+  ];
+
+  useEffect(() => {
+    if (!isInView) return;
+
+    const interval = setInterval(() => {
+      setCurrentPhase((prev) => (prev + 1) % phases.length);
+    }, 2500);
+
+    return () => clearInterval(interval);
+  }, [isInView, phases.length]);
+
+  return (
+    <div ref={ref} className="space-y-4">
+      {phases.map((phase, i) => {
+        const PhaseIcon = phase.icon;
+        const isActive = i <= currentPhase;
+        const isCurrent = i === currentPhase;
+
+        return (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: i * 0.1 }}
+            className={`flex items-center gap-4 backdrop-blur-xl rounded-2xl p-5 border transition-all ${
+              isActive
+                ? "bg-[#d7f20d]/10 border-[#d7f20d]/30"
+                : "bg-white/5 border-white/10"
+            }`}
+          >
+            <motion.div
+              animate={{
+                scale: isCurrent ? [1, 1.2, 1] : 1,
+                rotate: isCurrent ? [0, 360] : 0,
+              }}
+              transition={{ duration: isCurrent ? 2 : 0.3 }}
+              className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                isActive ? "bg-[#d7f20d]/20" : "bg-white/5"
+              }`}
+            >
+              <PhaseIcon
+                size={24}
+                className={
+                  isActive ? "text-[#d7f20d]" : "text-white/40"
+                }
+              />
+            </motion.div>
+
+            <div className="flex-1">
+              <h4
+                className={`font-['Audiowide',cursive] text-sm mb-1 ${
+                  isActive ? "text-white" : "text-white/40"
+                }`}
+              >
+                {phase.title}
+              </h4>
+              <p
+                className={`text-xs ${isActive ? "text-white/60" : "text-white/30"}`}
+              >
+                {phase.duration}
+              </p>
+            </div>
+
+            {isActive && (
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                className="w-2 h-2 rounded-full bg-[#d7f20d]"
+              />
+            )}
+          </motion.div>
+        );
+      })}
+    </div>
+  );
+}
+
+// ─── EFEITO 5: Tech Stack Orbit ───
+function TechStackOrbit() {
+  const technologies = [
+    { name: "React", color: "#61dafb" },
+    { name: "Node.js", color: "#68a063" },
+    { name: "Python", color: "#ffd43b" },
+    { name: "AWS", color: "#ff9900" },
+    { name: "Docker", color: "#2496ed" },
+    { name: "MongoDB", color: "#47a248" },
+  ];
+
+  return (
+    <div className="relative w-full h-[400px] flex items-center justify-center z-20">
+      {/* Orbits rings with subtle glow */}
+      <div className="absolute w-[300px] h-[300px] rounded-full border border-[#d7f20d]/20">
+        <div className="absolute inset-0 rounded-full bg-[#d7f20d]/5 blur-2xl" />
+      </div>
+      
+      <div className="absolute w-[200px] h-[200px] rounded-full border border-[#d7f20d]/30">
+        <div className="absolute inset-0 rounded-full bg-[#d7f20d]/10 blur-xl" />
+      </div>
+
+      {/* Center core with pulse */}
+      <motion.div 
+        className="relative z-30 w-20 h-20 rounded-full bg-gradient-to-br from-[#d7f20d]/30 to-[#d7f20d]/10 flex items-center justify-center border-2 border-[#d7f20d]/50"
+        animate={{ 
+          scale: [1, 1.1, 1],
+          boxShadow: [
+            "0 0 20px rgba(215,242,13,0.4)",
+            "0 0 40px rgba(215,242,13,0.7)",
+            "0 0 20px rgba(215,242,13,0.4)",
+          ]
+        }}
+        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <Code2 size={36} className="text-[#d7f20d]" />
+      </motion.div>
+
+      {/* Orbiting technologies */}
+      {technologies.map((tech, i) => {
+        const totalTechs = technologies.length;
+        const baseAngle = (i / totalTechs) * 360;
+        const radius = 150;
+
+        return (
+          <motion.div
+            key={tech.name}
+            className="absolute z-20"
+            style={{
+              width: `${radius * 2}px`,
+              height: `${radius * 2}px`,
+            }}
+            initial={{ rotate: baseAngle }}
+            animate={{ rotate: baseAngle + 360 }}
+            transition={{
+              duration: 25,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+          >
+            <motion.div
+              className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2"
+              style={{ 
+                transformOrigin: "center center",
+              }}
+              initial={{ rotate: -baseAngle }}
+              animate={{ rotate: -baseAngle - 360 }}
+              transition={{ 
+                duration: 25, 
+                repeat: Infinity, 
+                ease: "linear" 
+              }}
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: i * 0.15, duration: 0.6 }}
+                whileHover={{ 
+                  scale: 1.25, 
+                  y: -8,
+                  transition: { duration: 0.2 }
+                }}
+                className="backdrop-blur-xl bg-white/10 border border-[#d7f20d]/40 rounded-xl px-5 py-3 shadow-lg cursor-pointer"
+                style={{
+                  boxShadow: `0 0 20px ${tech.color}40, 0 4px 10px rgba(0,0,0,0.3)`,
+                }}
+              >
+                <span className="text-white text-sm font-['Audiowide',cursive] whitespace-nowrap">
+                  {tech.name}
+                </span>
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        );
+      })}
+
+      {/* Rotating connection lines */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none z-10"
+        animate={{ rotate: 360 }}
+        transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+      >
+        {technologies.map((tech, i) => {
+          const angle = (i / technologies.length) * 360;
+          
+          return (
+            <div
+              key={`line-${i}`}
+              className="absolute left-1/2 top-1/2 w-[1px] h-[150px] origin-top"
+              style={{
+                background: `linear-gradient(to bottom, rgba(215,242,13,0.3), transparent)`,
+                transform: `rotate(${angle}deg)`,
+              }}
+            />
+          );
+        })}
+      </motion.div>
+    </div>
+  );
+}
+
+export default function CrmPage() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"],
+    layoutEffect: false
+  });
+  const scaleProgress = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
+
+  const systemTypes = [
+    {
+      icon: Monitor,
+      title: "Web Apps",
+      description:
+        "Sistemas web responsivos e escaláveis para qualquer necessidade de negócio.",
+      features: [
+        "SaaS Platforms",
+        "Dashboards",
+        "E-commerce",
+        "Portais Corporativos",
+      ],
+    },
+    {
+      icon: Smartphone,
+      title: "Mobile Apps",
+      description:
+        "Apps nativos iOS e Android com experiência premium e performance máxima.",
+      features: [
+        "iOS Nativo",
+        "Android Nativo",
+        "React Native",
+        "Flutter",
+      ],
+    },
+    {
+      icon: Database,
+      title: "ERP & CRM",
+      description:
+        "Sistemas enterprise robustos para gestão completa do seu negócio.",
+      features: [
+        "Gestão Financeira",
+        "Automação",
+        "BI & Analytics",
+        "Integrações",
+      ],
+    },
+    {
+      icon: Cloud,
+      title: "Cloud Solutions",
+      description:
+        "Infraestrutura cloud escalável e segura para aplicações críticas.",
+      features: ["AWS", "Azure", "Google Cloud", "DevOps"],
+    },
+  ];
+
+  return (
+    <div ref={containerRef} className="relative bg-[#0a0a0a] overflow-hidden" style={{ position: 'relative' }}>
+      {/* Progress Bar */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-1 bg-[#d7f20d] origin-left z-50"
+        style={{ scaleX: scaleProgress }}
+      />
+
+      {/* Background Elements */}
+      <div className="fixed inset-0 opacity-[0.015] pointer-events-none">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(215,242,13,0.5) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(215,242,13,0.5) 1px, transparent 1px)
+            `,
+            backgroundSize: "60px 60px",
+          }}
+        />
+      </div>
+
+      <FloatingCodeParticles />
+
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      {/* SEÇÃO 1: HERO */}
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
-          <FadeInImage src={imgHero} alt="CRM & Sistemas" className="w-full h-full object-cover scale-[1.1]" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-black/60 to-black/30" />
+          <ImageWithFallback
+            src={imgHero}
+            alt="Desenvolvimento de Sistemas"
+            className="w-full h-full object-cover scale-110"
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a0a]/95 via-[#0a0a0a]/90 to-[#d7f20d]/5" />
         </div>
 
-        <div className="relative z-10 p-8 md:p-16 lg:p-24 w-full">
-          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, delay: 0.1 }}
-            className="inline-flex items-center gap-2 backdrop-blur-xl bg-white/[0.05] border border-[#d7f20d]/20 rounded-full px-4 py-2 mb-6">
-            <svg viewBox="0 0 703.19 389.95" className="w-[14px] h-[14px] rotate-[135deg]" fill="none">
-              <path d={svgLogoSimplified.p3d1bf00} fill="#d7f20d" stroke="#d7f20d" strokeMiterlimit="10" strokeWidth="35.43" />
-            </svg>
-            <span className="text-[#d7f20d] font-['Audiowide',cursive] text-[11px] uppercase tracking-widest">Automação & Gestão</span>
+        {/* Animated gradient orbs */}
+        <motion.div
+          className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-[#d7f20d]/10 blur-[120px]"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.5, 0.3],
+          }}
+          transition={{ duration: 8, repeat: Infinity }}
+        />
+
+        <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 text-center pt-32 pb-20">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="inline-flex items-center gap-2 backdrop-blur-xl bg-white/5 border border-[#d7f20d]/30 rounded-full px-5 py-2 mb-8"
+          >
+            <Code2 size={16} className="text-[#d7f20d]" />
+            <span className="text-[#d7f20d] font-['Audiowide',cursive] text-xs uppercase tracking-wider">
+              Desenvolvimento sob medida
+            </span>
           </motion.div>
 
-          <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.15 }}
-            className="font-['Audiowide',cursive] text-white text-[clamp(28px,5vw,56px)] uppercase tracking-tight leading-[1.1] max-w-3xl">
-            CRM & <span className="text-[#d7f20d]">Sistemas</span>
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="font-['Audiowide',cursive] text-white text-[clamp(40px,8vw,92px)] uppercase tracking-tight leading-[0.9] mb-8"
+          >
+            DO PAPEL AO{" "}
+            <span className="text-[#d7f20d]">SISTEMA REAL</span>
           </motion.h1>
 
-          <motion.div initial={{ width: 0 }} animate={{ width: 120 }} transition={{ duration: 0.6, delay: 0.3 }} className="h-[3px] bg-[#d7f20d] rounded-full mt-6" />
-
-          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.4 }}
-            className="text-white/50 font-['Geist',sans-serif] text-[clamp(15px,1.8vw,18px)] max-w-xl mt-6 leading-relaxed">
-            Centralize dados, automatize processos e tome decisões inteligentes com nosso CRM feito para escalar.
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="text-white/70 font-['Geist',sans-serif] text-[clamp(18px,2.5vw,24px)] max-w-3xl mx-auto mb-12 leading-relaxed"
+          >
+            Transformamos sua ideia em{" "}
+            <span className="text-[#d7f20d] font-bold">
+              sistema funcionando
+            </span>
+            . Web, mobile, desktop, enterprise. Qualquer tipo,
+            qualquer tecnologia.
           </motion.p>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.5 }} className="flex flex-wrap gap-3 mt-8">
-            <Link to="/contato" className="bg-[#d7f20d] text-[#0a0a0a] px-7 py-3.5 rounded-xl font-['Audiowide',cursive] text-[14px] uppercase hover:bg-[#c5e00c] transition-all flex items-center gap-2 shadow-lg shadow-[#d7f20d]/20 hover:shadow-[#d7f20d]/40 hover:-translate-y-0.5">
-              Começar agora <ArrowRight size={16} />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-20"
+          >
+            <Link
+              to="/contato"
+              className="group inline-flex items-center gap-3 bg-[#d7f20d] text-[#0a0a0a] px-10 py-5 rounded-xl font-['Audiowide',cursive] text-base uppercase shadow-2xl shadow-[#d7f20d]/40 hover:shadow-[#d7f20d]/60 hover:bg-[#c5e00c] transition-all hover:-translate-y-1"
+            >
+              Transformar Minha Ideia
+              <ArrowRight
+                size={20}
+                className="group-hover:translate-x-1 transition-transform"
+              />
             </Link>
-            <button className="border border-white/20 text-white px-7 py-3.5 rounded-xl font-['Audiowide',cursive] text-[14px] uppercase hover:bg-white/10 transition-all backdrop-blur-sm">
-              Ver demo
-            </button>
           </motion.div>
 
-          {/* Dashboard preview */}
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.7 }} className="mt-12 max-w-md">
-            <div className="rounded-2xl overflow-hidden border border-white/10 shadow-[0_0_40px_rgba(215,242,13,0.05)]">
-              <FadeInImage src={imgCrmDashboard} alt="CRM Dashboard" className="w-full object-cover" />
-            </div>
+          {/* Stats */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.8 }}
+            className="grid grid-cols-2 md:grid-cols-4 gap-6"
+          >
+            {[
+              { value: "200+", label: "Sistemas Entregues" },
+              { value: "15+", label: "Tecnologias" },
+              { value: "98%", label: "Satisfação" },
+              { value: "24/7", label: "Suporte" },
+            ].map((stat, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1 + i * 0.1 }}
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-6 text-center"
+              >
+                <p className="text-white font-['Audiowide',cursive] text-[clamp(24px,4vw,36px)] mb-1">
+                  {stat.value}
+                </p>
+                <p className="text-white/50 text-xs uppercase tracking-wider">
+                  {stat.label}
+                </p>
+              </motion.div>
+            ))}
           </motion.div>
         </div>
-
-        <motion.div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10" animate={{ y: [0, 8, 0] }} transition={{ duration: 2, repeat: Infinity }}>
-          <ChevronDown size={24} className="text-[#d7f20d]/50" />
-        </motion.div>
       </section>
 
-      {/* ─── FEATURES ─── */}
-      <section className="py-24 px-6 md:px-16 relative z-10">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {features.map((feature, index) => (
-              <TiltCard key={feature.title} tiltMaxX={8} tiltMaxY={8} scale={1.02}>
-                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1, duration: 0.5 }}
-                  className="backdrop-blur-xl bg-white/[0.03] border border-white/10 rounded-2xl p-8 h-full relative overflow-hidden group hover:border-[#d7f20d]/30 transition-colors">
-                  <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#d7f20d]/30 to-transparent" />
-                  <div className="w-12 h-12 rounded-xl bg-[#d7f20d]/10 flex items-center justify-center mb-6">
-                    <feature.icon size={24} className="text-[#d7f20d]" />
-                  </div>
-                  <h3 className="text-white text-[18px] font-['Audiowide',cursive] uppercase">{feature.title}</h3>
-                  <p className="text-white/40 font-['Geist',sans-serif] text-[14px] mt-2 leading-relaxed">{feature.description}</p>
-                </motion.div>
-              </TiltCard>
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      {/* SEÇÃO 2: DO PAPEL AO REAL - PROCESSO */}
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section className="relative py-32 px-6 md:px-12 bg-gradient-to-b from-transparent via-[#d7f20d]/[0.02] to-transparent">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <span className="text-[#d7f20d] font-['Audiowide',cursive] text-sm uppercase tracking-widest mb-4 block">
+              Nossa Metodologia
+            </span>
+            <h2 className="font-['Audiowide',cursive] text-white text-[clamp(32px,6vw,64px)] uppercase tracking-tight mb-6">
+              DA IDEIA AO{" "}
+              <span className="text-[#d7f20d]">LANÇAMENTO</span>
+            </h2>
+            <p className="text-white/60 font-['Geist',sans-serif] text-lg max-w-2xl mx-auto">
+              Processo transparente e ágil. Você acompanha cada
+              etapa do desenvolvimento.
+            </p>
+          </motion.div>
+
+          <div className="max-w-4xl mx-auto">
+            <PaperToDigital />
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8"
+          >
+            {[
+              {
+                icon: Lightbulb,
+                title: "Você tem a ideia",
+                desc: "Mesmo que seja só um rascunho no papel",
+              },
+              {
+                icon: Code2,
+                title: "Nós desenvolvemos",
+                desc: "Com as melhores tecnologias do mercado",
+              },
+              {
+                icon: Rocket,
+                title: "Sistema no ar",
+                desc: "Funcionando, escalável e seguro",
+              },
+            ].map((step, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.15 }}
+                className="text-center"
+              >
+                <div className="w-20 h-20 rounded-2xl bg-[#d7f20d]/10 flex items-center justify-center mx-auto mb-6">
+                  <step.icon
+                    size={40}
+                    className="text-[#d7f20d]"
+                  />
+                </div>
+                <h3 className="text-white font-['Audiowide',cursive] text-xl mb-3">
+                  {step.title}
+                </h3>
+                <p className="text-white/60 text-sm">
+                  {step.desc}
+                </p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      {/* SEÇÃO 3: TIPOS DE SISTEMAS */}
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section className="relative py-32 px-6 md:px-12">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <span className="text-[#d7f20d] font-['Audiowide',cursive] text-sm uppercase tracking-widest mb-4 block">
+              Expertise Completa
+            </span>
+            <h2 className="font-['Audiowide',cursive] text-white text-[clamp(32px,6vw,64px)] uppercase tracking-tight mb-6">
+              QUALQUER TIPO DE{" "}
+              <span className="text-[#d7f20d]">SISTEMA</span>
+            </h2>
+            <p className="text-white/60 font-['Geist',sans-serif] text-lg max-w-3xl mx-auto">
+              Web, mobile, desktop, cloud. Se você consegue
+              imaginar, nós conseguimos desenvolver.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {systemTypes.map((system, i) => (
+              <SystemTypeCard
+                key={i}
+                system={system}
+                delay={i * 0.1}
+              />
             ))}
           </div>
         </div>
       </section>
 
-      {/* ─── HIGH PERFORMANCE ─── */}
-      <section className="py-24 px-6 md:px-16 relative z-10">
-        <div className="max-w-6xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="text-center mb-16">
-            <span className="text-[#d7f20d] font-['Audiowide',cursive] text-[12px] uppercase tracking-widest mb-4 block">Performance</span>
-            <h2 className="font-['Audiowide',cursive] text-white text-[clamp(28px,4vw,42px)] uppercase tracking-tight">
-              CONSTRUÍDO PARA <span className="text-[#d7f20d]">ALTA PERFORMANCE</span>
-            </h2>
-          </motion.div>
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      {/* SEÇÃO 4: MOBILE APPS EM DESTAQUE */}
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section className="relative py-32 px-6 md:px-12 bg-gradient-to-b from-transparent via-[#d7f20d]/[0.02] to-transparent">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            >
+              <span className="text-[#d7f20d] font-['Audiowide',cursive] text-sm uppercase tracking-widest mb-4 block">
+                Mobile Development
+              </span>
+              <h2 className="font-['Audiowide',cursive] text-white text-[clamp(32px,6vw,56px)] uppercase tracking-tight mb-8">
+                APPS{" "}
+                <span className="text-[#d7f20d]">NATIVOS</span>{" "}
+                iOS & ANDROID
+              </h2>
+              <p className="text-white/70 font-['Geist',sans-serif] text-lg mb-8 leading-relaxed">
+                Desenvolvemos apps mobile nativos com
+                performance máxima e experiência premium. Sua
+                ideia vira realidade nas mãos de milhões de
+                usuários.
+              </p>
 
-          <TiltCard tiltMaxX={4} tiltMaxY={4} scale={1.01}>
-            <div className="backdrop-blur-xl bg-white/[0.03] border border-white/10 rounded-2xl p-8 md:p-12 relative overflow-hidden">
-              <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#d7f20d]/30 to-transparent" />
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                <div className="rounded-xl overflow-hidden border border-white/5">
-                  <FadeInImage src={imgCrmFeature1} alt="CRM Feature" className="w-full object-cover rounded-xl" />
-                </div>
-                <div>
-                  <h3 className="font-['Audiowide',cursive] text-white text-[24px] uppercase tracking-tight">Acesso centralizado para times e clientes</h3>
-                  <p className="text-white/40 font-['Geist',sans-serif] text-[15px] mt-4 leading-relaxed">
-                    Gerencie todos os seus clientes, leads e oportunidades em um único painel. Colaboração em tempo real para toda equipe.
-                  </p>
-                  <div className="grid grid-cols-2 gap-4 mt-8">
-                    {detailedFeatures.map((f) => (
-                      <div key={f.title} className="flex items-start gap-2">
-                        <div className="w-2 h-2 bg-[#d7f20d] rounded-full mt-2 flex-shrink-0 shadow-[0_0_8px_rgba(215,242,13,0.4)]" />
-                        <div>
-                          <h4 className="text-white text-[14px] font-['Geist',sans-serif]">{f.title}</h4>
-                          <p className="text-white/30 text-[12px] font-['Geist',sans-serif]">{f.description}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </TiltCard>
-        </div>
-      </section>
-
-      {/* ─── PRICING ─── */}
-      <section className="py-24 px-6 md:px-16 relative z-10">
-        <div className="max-w-6xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="text-center mb-16">
-            <span className="text-[#d7f20d] font-['Audiowide',cursive] text-[12px] uppercase tracking-widest mb-4 block">Investimento</span>
-            <h2 className="font-['Audiowide',cursive] text-white text-[clamp(28px,4vw,42px)] uppercase tracking-tight">
-              PREÇOS <span className="text-[#d7f20d]">FLEXÍVEIS</span>
-            </h2>
-          </motion.div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {pricingPlans.map((plan, index) => (
-              <TiltCard key={plan.name} tiltMaxX={6} tiltMaxY={6} scale={1.02}>
-                <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.15, duration: 0.5 }}
-                  className={`rounded-2xl p-8 relative overflow-hidden h-full transition-colors ${plan.highlighted
-                    ? "bg-[#d7f20d] text-[#0a0a0a] border border-[#d7f20d]"
-                    : "backdrop-blur-xl bg-white/[0.03] border border-white/10 hover:border-[#d7f20d]/30"
-                  }`}>
-                  <div className={`absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent ${plan.highlighted ? "via-[#0a0a0a]/20" : "via-[#d7f20d]/30"} to-transparent`} />
-                  <h3 className={`font-['Audiowide',cursive] text-[16px] uppercase ${plan.highlighted ? "text-[#0a0a0a]" : "text-[#d7f20d]"}`}>{plan.name}</h3>
-                  <div className="flex items-baseline gap-1 mt-4">
-                    <span className={`font-['Audiowide',cursive] text-[32px] ${plan.highlighted ? "text-[#0a0a0a]" : "text-white"}`}>{plan.price}</span>
-                    <span className={`text-[14px] ${plan.highlighted ? "text-[#0a0a0a]/60" : "text-white/40"}`}>{plan.period}</span>
-                  </div>
-                  <ul className="mt-6 space-y-2">
-                    {plan.features.map((f) => (
-                      <li key={f} className={`flex items-center gap-2 text-[14px] ${plan.highlighted ? "text-[#0a0a0a]/80" : "text-white/50"}`}>
-                        <CheckCircle2 size={14} className={plan.highlighted ? "text-[#0a0a0a]" : "text-[#d7f20d]"} />
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
-                  <Link to="/contato" className={`block w-full mt-6 py-3 rounded-xl text-[14px] font-['Audiowide',cursive] uppercase text-center transition-all ${plan.highlighted
-                    ? "bg-[#0a0a0a] text-[#d7f20d] hover:bg-[#1a1a1a]"
-                    : "bg-[#d7f20d] text-[#0a0a0a] hover:bg-[#c5e00c]"
-                  }`}>
-                    Começar
-                  </Link>
-                </motion.div>
-              </TiltCard>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ─── SUCCESS STORIES ─── */}
-      <section className="py-24 px-6 md:px-16 relative z-10">
-        <div className="max-w-6xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="text-center mb-16">
-            <span className="text-[#d7f20d] font-['Audiowide',cursive] text-[12px] uppercase tracking-widest mb-4 block">Cases</span>
-            <h2 className="font-['Audiowide',cursive] text-white text-[clamp(28px,4vw,42px)] uppercase tracking-tight">
-              HISTÓRIAS DE <span className="text-[#d7f20d]">SUCESSO</span>
-            </h2>
-          </motion.div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {successStories.map((story) => (
-              <TiltCard key={story.name} tiltMaxX={8} tiltMaxY={8} scale={1.02}>
-                <div className="backdrop-blur-xl bg-white/[0.03] border border-white/10 rounded-2xl overflow-hidden h-full relative hover:border-[#d7f20d]/20 transition-colors group">
-                  <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#d7f20d]/20 to-transparent z-10" />
-                  <div className="aspect-[4/3] overflow-hidden">
-                    <FadeInImage src={story.image} alt={story.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                  </div>
-                  <div className="p-4">
-                    <div className="flex items-center gap-2 mb-2">
-                      <FadeInImage src={story.brand} alt="" className="w-6 h-6 rounded-full object-cover" />
-                      <span className="text-white text-[14px] font-['Geist',sans-serif]">{story.name}</span>
+              <div className="space-y-6">
+                {[
+                  {
+                    icon: Smartphone,
+                    title: "Nativo iOS/Android",
+                    desc: "Swift, Kotlin, React Native, Flutter",
+                  },
+                  {
+                    icon: Zap,
+                    title: "Performance 60fps",
+                    desc: "Animações fluidas e responsividade",
+                  },
+                  {
+                    icon: Shield,
+                    title: "App Store Ready",
+                    desc: "Publicação garantida nas lojas",
+                  },
+                  {
+                    icon: Globe,
+                    title: "Offline-First",
+                    desc: "Funciona sem internet",
+                  },
+                ].map((feature, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, x: -30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.1 }}
+                    className="flex items-start gap-4"
+                  >
+                    <div className="w-12 h-12 rounded-xl bg-[#d7f20d]/10 flex items-center justify-center flex-shrink-0">
+                      <feature.icon
+                        size={24}
+                        className="text-[#d7f20d]"
+                      />
                     </div>
-                    <p className="text-white/40 font-['Geist',sans-serif] text-[13px]">{story.description}</p>
-                  </div>
-                </div>
-              </TiltCard>
-            ))}
+                    <div>
+                      <h4 className="text-white font-['Audiowide',cursive] text-base mb-2">
+                        {feature.title}
+                      </h4>
+                      <p className="text-white/60 text-sm">
+                        {feature.desc}
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="relative"
+            >
+              <div className="relative aspect-square rounded-3xl overflow-hidden">
+                <ImageWithFallback
+                  src={imgMobileApp}
+                  alt="Mobile App Development"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent" />
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* ─── FAQ ─── */}
-      <section className="py-24 px-6 md:px-16 relative z-10">
-        <div className="max-w-4xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="mb-12">
-            <span className="text-[#d7f20d] font-['Audiowide',cursive] text-[12px] uppercase tracking-widest mb-4 block">Dúvidas</span>
-            <h2 className="font-['Audiowide',cursive] text-white text-[clamp(28px,4vw,42px)] uppercase tracking-tight">Suas dúvidas, <span className="text-[#d7f20d]">respondidas</span></h2>
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      {/* SEÇÃO 5: SISTEMAS ENTERPRISE */}
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section className="relative py-32 px-6 md:px-12">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="order-2 lg:order-1 relative"
+            >
+              <div className="relative aspect-video rounded-3xl overflow-hidden">
+                <ImageWithFallback
+                  src={imgArchitecture}
+                  alt="Enterprise Systems"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/80 via-transparent to-transparent" />
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="order-1 lg:order-2"
+            >
+              <span className="text-[#d7f20d] font-['Audiowide',cursive] text-sm uppercase tracking-widest mb-4 block">
+                Enterprise Solutions
+              </span>
+              <h2 className="font-['Audiowide',cursive] text-white text-[clamp(32px,6vw,56px)] uppercase tracking-tight mb-8">
+                ERP, CRM &{" "}
+                <span className="text-[#d7f20d]">GESTÃO</span>
+              </h2>
+              <p className="text-white/70 font-['Geist',sans-serif] text-lg mb-8 leading-relaxed">
+                Sistemas robustos para gestão completa do seu
+                negócio. Integração com tudo que você já usa.
+              </p>
+
+              <div className="grid grid-cols-2 gap-6">
+                {[
+                  {
+                    icon: BarChart3,
+                    label: "Business Intelligence",
+                    value: "100%",
+                  },
+                  {
+                    icon: Users,
+                    label: "Multiusuário",
+                    value: "Ilimitado",
+                  },
+                  {
+                    icon: Lock,
+                    label: "Segurança",
+                    value: "Enterprise",
+                  },
+                  {
+                    icon: Settings,
+                    label: "Customização",
+                    value: "Total",
+                  },
+                ].map((stat, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.1 }}
+                    whileHover={{ scale: 1.05 }}
+                    className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-6 text-center"
+                  >
+                    <stat.icon
+                      className="text-[#d7f20d] mx-auto mb-3"
+                      size={32}
+                    />
+                    <p className="text-[#d7f20d] font-['Audiowide',cursive] text-xl mb-2">
+                      {stat.value}
+                    </p>
+                    <p className="text-white/60 text-xs">
+                      {stat.label}
+                    </p>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      {/* SEÇÃO 6: PROCESSO DE DESENVOLVIMENTO DETALHADO */}
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section className="relative py-32 px-6 md:px-12 bg-gradient-to-b from-transparent via-[#d7f20d]/[0.02] to-transparent">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <span className="text-[#d7f20d] font-['Audiowide',cursive] text-sm uppercase tracking-widest mb-4 block">
+              Metodologia Ágil
+            </span>
+            <h2 className="font-['Audiowide',cursive] text-white text-[clamp(32px,6vw,64px)] uppercase tracking-tight mb-6">
+              PROCESSO{" "}
+              <span className="text-[#d7f20d]">
+                TRANSPARENTE
+              </span>
+            </h2>
+            <p className="text-white/60 font-['Geist',sans-serif] text-lg max-w-2xl mx-auto">
+              Acompanhe cada etapa do desenvolvimento. Entregas
+              parciais, feedback constante.
+            </p>
           </motion.div>
-          <div className="space-y-4">
-            {faqs.map((faq, index) => (
-              <motion.div key={index} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1, duration: 0.5 }}
-                className="backdrop-blur-xl bg-white/[0.03] border border-white/10 rounded-2xl overflow-hidden hover:border-[#d7f20d]/20 transition-colors">
-                <button className="w-full flex items-center justify-between p-6 text-left" onClick={() => setOpenFaq(openFaq === index ? null : index)}>
-                  <span className="text-white/80 font-['Geist',sans-serif] text-[15px] pr-4">{faq.question}</span>
-                  {openFaq === index ? <ChevronUp size={18} className="text-[#d7f20d] flex-shrink-0" /> : <ChevronDown size={18} className="text-white/30 flex-shrink-0" />}
-                </button>
-                {openFaq === index && (
-                  <div className="px-6 pb-6 text-white/40 font-['Geist',sans-serif] text-[14px] leading-relaxed border-t border-white/5 pt-4">{faq.answer}</div>
-                )}
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-10"
+            >
+              <DevelopmentTimeline />
+            </motion.div>
+
+            <div className="space-y-6">
+              {[
+                {
+                  title: "Sprints Semanais",
+                  desc: "Entregas funcionais toda semana",
+                },
+                {
+                  title: "Comunicação Direta",
+                  desc: "Acesso direto ao time de desenvolvimento",
+                },
+                {
+                  title: "Testes Contínuos",
+                  desc: "QA em cada feature desenvolvida",
+                },
+                {
+                  title: "Deploy Gradual",
+                  desc: "Lançamento controlado e seguro",
+                },
+              ].map((item, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, x: 50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="flex items-start gap-4 backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-5"
+                >
+                  <CheckCircle
+                    size={24}
+                    className="text-[#d7f20d] flex-shrink-0 mt-1"
+                  />
+                  <div>
+                    <h4 className="text-white font-['Audiowide',cursive] text-base mb-2">
+                      {item.title}
+                    </h4>
+                    <p className="text-white/60 text-sm">
+                      {item.desc}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      {/* SEÇÃO 7: STACK TECNOLÓGICO */}
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section className="relative py-32 px-6 md:px-12">
+        {/* Canvas fullscreen de fundo com partículas e shooting stars */}
+        <FullscreenParticles />
+        
+        <div className="max-w-7xl mx-auto relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <span className="text-[#d7f20d] font-['Audiowide',cursive] text-sm uppercase tracking-widest mb-4 block">
+              Tecnologias
+            </span>
+            <h2 className="font-['Audiowide',cursive] text-white text-[clamp(32px,6vw,64px)] uppercase tracking-tight mb-6">
+              STACK{" "}
+              <span className="text-[#d7f20d]">COMPLETO</span>
+            </h2>
+            <p className="text-white/60 font-['Geist',sans-serif] text-lg max-w-2xl mx-auto mb-12">
+              Dominamos as principais tecnologias do mercado.
+              Escolhemos a melhor para o seu projeto.
+            </p>
+
+            <TechStackOrbit />
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      {/* SEÇÃO 8: CUSTOMIZAÇÃO TOTAL */}
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section className="relative py-32 px-6 md:px-12 bg-gradient-to-b from-transparent via-[#d7f20d]/[0.02] to-transparent">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            >
+              <span className="text-[#d7f20d] font-['Audiowide',cursive] text-sm uppercase tracking-widest mb-4 block">
+                Sob Medida
+              </span>
+              <h2 className="font-['Audiowide',cursive] text-white text-[clamp(32px,6vw,56px)] uppercase tracking-tight mb-8">
+                100%{" "}
+                <span className="text-[#d7f20d]">
+                  CUSTOMIZADO
+                </span>
+              </h2>
+              <p className="text-white/70 font-['Geist',sans-serif] text-lg mb-8 leading-relaxed">
+                Não usamos templates. Cada linha de código é
+                escrita especificamente para o seu negócio. Seu
+                sistema, suas regras, sua identidade.
+              </p>
+
+              <div className="space-y-4">
+                {[
+                  "Interface única e personalizada",
+                  "Lógica de negócio sob medida",
+                  "Integrações com seus sistemas",
+                  "Escalabilidade garantida",
+                  "Código limpo e documentado",
+                  "Propriedade total do código",
+                ].map((item, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, x: -30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.1 }}
+                    className="flex items-center gap-3"
+                  >
+                    <CheckCircle
+                      size={20}
+                      className="text-[#d7f20d] flex-shrink-0"
+                    />
+                    <span className="text-white/80 text-base">
+                      {item}
+                    </span>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="relative"
+            >
+              <div className="relative aspect-square rounded-3xl overflow-hidden">
+                <ImageWithFallback
+                  src={imgTeamCollab}
+                  alt="Customização Total"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent" />
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      {/* SEÇÃO 9: RESULTADOS & CASES */}
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section className="relative py-32 px-6 md:px-12">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <span className="text-[#d7f20d] font-['Audiowide',cursive] text-sm uppercase tracking-widest mb-4 block">
+              Resultados Reais
+            </span>
+            <h2 className="font-['Audiowide',cursive] text-white text-[clamp(32px,6vw,64px)] uppercase tracking-tight mb-6">
+              PROJETOS DE{" "}
+              <span className="text-[#d7f20d]">SUCESSO</span>
+            </h2>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                company: "FinTech Solutions",
+                industry: "Financeiro",
+                result: "+500%",
+                metric: "crescimento em vendas",
+                system: "ERP Enterprise",
+              },
+              {
+                company: "HealthCare Pro",
+                industry: "Saúde",
+                result: "300K+",
+                metric: "usuários ativos",
+                system: "App Mobile",
+              },
+              {
+                company: "LogisTech",
+                industry: "Logística",
+                result: "-70%",
+                metric: "custos operacionais",
+                system: "Sistema de Gestão",
+              },
+            ].map((caseStudy, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.15 }}
+                whileHover={{ y: -10 }}
+                className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-8 hover:border-[#d7f20d]/30 transition-all"
+              >
+                <div className="mb-6">
+                  <h3 className="text-white font-['Audiowide',cursive] text-2xl mb-2">
+                    {caseStudy.company}
+                  </h3>
+                  <p className="text-white/50 text-sm">
+                    {caseStudy.industry}
+                  </p>
+                </div>
+
+                <div className="mb-6">
+                  <p className="text-[#d7f20d] font-['Audiowide',cursive] text-5xl mb-2">
+                    {caseStudy.result}
+                  </p>
+                  <p className="text-white/70 text-sm mb-4">
+                    {caseStudy.metric}
+                  </p>
+                  <div className="inline-block backdrop-blur-xl bg-[#d7f20d]/10 border border-[#d7f20d]/30 rounded-full px-4 py-2">
+                    <p className="text-[#d7f20d] text-xs font-['Audiowide',cursive]">
+                      {caseStudy.system}
+                    </p>
+                  </div>
+                </div>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ─── CTA ─── */}
-      <section className="py-32 px-6 relative overflow-hidden z-10">
-        <div className="absolute inset-0 pointer-events-none hidden md:block">
-          <motion.div className="absolute top-0 left-[20%] w-[1px] h-full origin-top" initial={{ scaleY: 0, opacity: 0 }} whileInView={{ scaleY: 1, opacity: 1 }} viewport={{ amount: 0.2 }} transition={{ duration: 1 }}>
-            <div className="w-full h-full bg-gradient-to-b from-[#d7f20d]/20 via-[#d7f20d]/10 to-transparent" />
-          </motion.div>
-          <motion.div className="absolute top-0 right-[20%] w-[1px] h-full origin-top" initial={{ scaleY: 0, opacity: 0 }} whileInView={{ scaleY: 1, opacity: 1 }} viewport={{ amount: 0.2 }} transition={{ duration: 1, delay: 0.2 }}>
-            <div className="w-full h-full bg-gradient-to-b from-[#d7f20d]/20 via-[#d7f20d]/10 to-transparent" />
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      {/* SEÇÃO 10: CTA FINAL */}
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section className="relative py-32 px-6 md:px-12 bg-gradient-to-b from-transparent via-[#d7f20d]/[0.02] to-transparent overflow-hidden">
+        <motion.div
+          className="absolute inset-0 opacity-30"
+          animate={{
+            background: [
+              "radial-gradient(circle at 0% 0%, rgba(215,242,13,0.15) 0%, transparent 50%)",
+              "radial-gradient(circle at 100% 100%, rgba(215,242,13,0.15) 0%, transparent 50%)",
+              "radial-gradient(circle at 0% 100%, rgba(215,242,13,0.15) 0%, transparent 50%)",
+              "radial-gradient(circle at 100% 0%, rgba(215,242,13,0.15) 0%, transparent 50%)",
+              "radial-gradient(circle at 0% 0%, rgba(215,242,13,0.15) 0%, transparent 50%)",
+            ],
+          }}
+          transition={{ duration: 20, repeat: Infinity }}
+        />
+
+        <div className="max-w-5xl mx-auto relative z-10">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="backdrop-blur-xl bg-white/5 border-2 border-[#d7f20d]/30 rounded-3xl p-16 text-center relative overflow-hidden"
+          >
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#d7f20d] to-transparent" />
+
+            <motion.div
+              animate={{ scale: [1, 1.2, 1] }}
+              transition={{ duration: 3, repeat: Infinity }}
+            >
+              <Sparkles
+                size={80}
+                className="text-[#d7f20d] mx-auto mb-8"
+              />
+            </motion.div>
+
+            <h2 className="font-['Audiowide',cursive] text-white text-[clamp(28px,6vw,56px)] uppercase tracking-tight mb-6">
+              PRONTO PARA TIRAR SUA IDEIA DO{" "}
+              <span className="text-[#d7f20d]">PAPEL?</span>
+            </h2>
+
+            <p className="text-white/70 font-['Geist',sans-serif] text-lg max-w-2xl mx-auto mb-12 leading-relaxed">
+              Agende uma conversa gratuita com nosso time. Vamos
+              transformar sua visão em sistema funcionando.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Link
+                to="/contato"
+                className="group inline-flex items-center gap-3 bg-[#d7f20d] text-[#0a0a0a] px-12 py-6 rounded-xl font-['Audiowide',cursive] text-lg uppercase shadow-2xl shadow-[#d7f20d]/50 hover:shadow-[#d7f20d]/70 hover:bg-[#c5e00c] transition-all hover:-translate-y-1"
+              >
+                Começar Meu Projeto
+                <ArrowRight
+                  size={24}
+                  className="group-hover:translate-x-2 transition-transform"
+                />
+              </Link>
+            </div>
+
+            <div className="mt-12 pt-8 border-t border-white/10">
+              <p className="text-white/40 text-sm">
+                ⚡ Resposta em 24h • 💡 Consultoria gratuita •
+                🚀 Desenvolvimento ágil
+              </p>
+            </div>
           </motion.div>
         </div>
-        <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ amount: 0.3 }} transition={{ duration: 0.6 }} className="max-w-4xl mx-auto text-center relative z-10">
-          <motion.div className="flex justify-center mb-8" animate={{ scale: [1, 1.08, 1] }} transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}>
-            <svg viewBox="0 0 703.19 389.95" className="w-[28px] h-[28px] rotate-[135deg]" fill="none">
-              <path d={svgLogoSimplified.p3d1bf00} fill="#d7f20d" stroke="#d7f20d" strokeMiterlimit="10" strokeWidth="35.43" />
-            </svg>
-          </motion.div>
-          <h2 className="font-['Audiowide',cursive] text-white text-[clamp(28px,4vw,48px)] uppercase tracking-tight mb-6">
-            Comece sua <span className="text-[#d7f20d]">jornada</span>
-          </h2>
-          <p className="text-white/40 font-['Geist',sans-serif] text-[18px] max-w-xl mx-auto leading-relaxed mb-10">
-            Experimente gratuitamente por 14 dias. Sem cartão de crédito.
-          </p>
-          <motion.div className="relative inline-block">
-            <motion.div className="absolute -inset-[3px] rounded-2xl border-2 border-[#d7f20d]/40" animate={{ borderColor: ["rgba(215,242,13,0.2)", "rgba(215,242,13,0.6)", "rgba(215,242,13,0.2)"], scale: [1, 1.03, 1] }} transition={{ duration: 2, repeat: Infinity }} />
-            <Link to="/contato" className="relative inline-flex items-center gap-3 bg-[#d7f20d] text-[#0a0a0a] px-10 py-5 rounded-xl font-['Audiowide',cursive] text-[15px] uppercase tracking-wide hover:bg-[#c5e00c] transition-all shadow-lg shadow-[#d7f20d]/20 hover:shadow-[#d7f20d]/40 hover:-translate-y-1 transform group">
-              Começar Agora
-              <motion.span animate={{ x: [0, 4, 0] }} transition={{ duration: 1.5, repeat: Infinity }}><ArrowRight size={20} /></motion.span>
-            </Link>
-          </motion.div>
-
-          {/* Newsletter */}
-          <div className="mt-16 max-w-md mx-auto">
-            <p className="text-white/50 text-[13px] mb-4 uppercase font-['Audiowide',cursive] tracking-wider">Newsletter</p>
-            <div className="flex backdrop-blur-xl bg-white/[0.03] border border-white/10 rounded-xl p-1">
-              <input type="email" placeholder="Seu email" className="bg-transparent flex-grow px-4 py-2 text-white placeholder-white/30 focus:outline-none text-[14px] font-['Geist',sans-serif]" />
-              <button className="bg-[#d7f20d] text-[#0a0a0a] p-2.5 rounded-lg hover:bg-[#c5e00c] transition-colors">
-                <Mail size={16} />
-              </button>
-            </div>
-          </div>
-        </motion.div>
       </section>
     </div>
   );

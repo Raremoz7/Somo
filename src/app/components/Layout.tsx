@@ -4,6 +4,19 @@ import { motion, AnimatePresence, useScroll, useSpring } from "motion/react";
 import { PageTransitionProvider, usePageTransition } from "./PageTransitionContext";
 import svgLogoSimplified from "../../imports/svg-f0leoh9j40";
 
+// Adiciona o favicon ao head do documento
+if (typeof document !== 'undefined') {
+  const favicon = document.querySelector('link[rel="icon"]') || document.createElement('link');
+  favicon.setAttribute('rel', 'icon');
+  favicon.setAttribute('type', 'image/svg+xml');
+  // Generate inline SVG favicon with square viewBox and padding so the logo isn't clipped
+  const svgFavicon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800"><rect width="800" height="800" rx="80" fill="%230a0a0a"/><g transform="translate(400,400) rotate(135) translate(-351.6,-195)"><path d="${svgLogoSimplified.p3d1bf00}" fill="%23d7f20d" stroke="%23d7f20d" stroke-miterlimit="10" stroke-width="35.43"/></g></svg>`;
+  favicon.setAttribute('href', `data:image/svg+xml,${svgFavicon}`);
+  if (!document.querySelector('link[rel="icon"]')) {
+    document.head.appendChild(favicon);
+  }
+}
+
 // SVG Paths from the design
 const svgPaths = {
   home: "M4 19V10C4 9.68333 4.07083 9.38333 4.2125 9.1C4.35417 8.81667 4.55 8.58333 4.8 8.4L10.8 3.9C11.15 3.63333 11.55 3.5 12 3.5C12.45 3.5 12.85 3.63333 13.2 3.9L19.2 8.4C19.45 8.58333 19.6458 8.81667 19.7875 9.1C19.9292 9.38333 20 9.68333 20 10V19C20 19.55 19.8042 20.0208 19.4125 20.4125C19.0208 20.8042 18.55 21 18 21H15C14.7167 21 14.4792 20.9042 14.2875 20.7125C14.0958 20.5208 14 20.2833 14 20V15C14 14.7167 13.9042 14.4792 13.7125 14.2875C13.5208 14.0958 13.2833 14 13 14H11C10.7167 14 10.4792 14.0958 10.2875 14.2875C10.0958 14.4792 10 14.7167 10 15V20C10 20.2833 9.90417 20.5208 9.7125 20.7125C9.52083 20.9042 9.28333 21 9 21H6C5.45 21 4.97917 20.8042 4.5875 20.4125C4.19583 20.0208 4 19.55 4 19Z",
@@ -15,15 +28,21 @@ const svgPaths = {
 
 const navLinks = [
   { label: "HOME", path: "/" },
-  { label: "SERVICOS", path: "/servicos", children: [
+  { label: "SERVIÇOS", path: "/servicos", children: [
     { label: "Web", path: "/web" },
     { label: "Social", path: "/social" },
     { label: "Videos", path: "/videos" },
     { label: "CRM", path: "/crm" },
+    { label: "Tráfego Pago", path: "/trafego" },
+    { label: "App Agendamento", path: "/servico-app-agendamento" },
+    { label: "Sistema de Gestão", path: "/servico-sistema-gestao" },
+    { label: "App E-commerce", path: "/servico-app-ecommerce" },
   ]},
   { label: "SISTEMAS", path: "/crm" },
   { label: "SOBRE", path: "/sobre" },
-  { label: "PORTFOLIO", path: "/portfolio" },
+  { label: "PORTFÓLIO", path: "/portfolio" },
+  { label: "BLOG", path: "/blog" },
+  { label: "CONTATO", path: "/contato" },
 ];
 
 const socialIcons = [
@@ -49,8 +68,8 @@ function LayoutInner() {
   const { isTransitioning } = usePageTransition();
 
   // Pages with Dark Hero (initially white text)
-  const hasDarkHero = ["/", "/social", "/videos", "/portfolio", "/servicos", "/web", "/crm", "/sobre", "/contato"].includes(location.pathname);
-
+  const hasDarkHero = ["/", "/social", "/videos", "/portfolio", "/servicos", "/web", "/crm", "/sobre", "/contato", "/blog", "/proposta"].includes(location.pathname) || location.pathname.startsWith("/portfolio/") || location.pathname.startsWith("/blog/");
+  
   // Scroll to top on route change
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -73,7 +92,9 @@ function LayoutInner() {
   const standardColor = isLightMode ? "#78787D" : "#9CA3AF"; 
   const logoColor = "#d7f20d";
 
-  const { scrollYProgress } = useScroll();
+  const { scrollYProgress } = useScroll({
+    layoutEffect: false
+  });
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
@@ -81,7 +102,7 @@ function LayoutInner() {
   });
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
+    <div className="relative min-h-screen bg-[#0a0a0a]" style={{ position: 'relative' }}>
       {/* Scroll Progress Bar */}
       <motion.div
         className="fixed top-0 left-0 right-0 h-1 bg-[#d7f20d] origin-left z-[60]"
@@ -101,10 +122,10 @@ function LayoutInner() {
                className="relative z-10 flex items-center group hover:scale-105 transition-transform"
              >
                <div className="relative flex items-center justify-center">
-                 <div className={`absolute inset-[-6px] rounded-xl transition-colors ${isLightMode ? "bg-black/5" : "bg-white/10"}`} />
+                 <div className="absolute inset-[-6px] rounded-xl bg-white/10 transition-colors" />
                  <svg
                    viewBox="0 0 703.19 389.95"
-                   className="relative z-10 w-[20px] h-[20px] md:w-[24px] md:h-[24px] rotate-[135deg] transition-all group-hover:drop-shadow-[0_0_8px_rgba(215,242,13,0.5)]"
+                   className="relative z-10 w-[24px] h-[24px] rotate-[135deg] transition-all group-hover:drop-shadow-[0_0_8px_rgba(215,242,13,0.5)]"
                    fill="none"
                  >
                    <path
@@ -212,7 +233,7 @@ function LayoutInner() {
       </nav>
 
       {/* Main Content with Page Transitions */}
-      <main>
+      <main className="relative">
         <AnimatePresence mode="wait">
           <motion.div
             key={location.pathname}
@@ -231,15 +252,30 @@ function LayoutInner() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-[#0d2618] text-white py-16 px-6 md:px-16">
+      <footer className="bg-[#0a0a0a] text-white py-16 px-6 md:px-16">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
             {/* Brand */}
             <div className="md:col-span-1">
               <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 bg-[#d7f20d] rounded-full flex items-center justify-center">
-                  <span className="text-[#0d2618] text-[10px] font-['Audiowide',cursive]">S</span>
-                </div>
+                <Link to="/" className="group">
+                  <div className="relative flex items-center justify-center">
+                    <div className="absolute inset-[-6px] rounded-xl bg-white/10 transition-colors" />
+                    <svg
+                      viewBox="0 0 703.19 389.95"
+                      className="relative z-10 w-[24px] h-[24px] rotate-[135deg] transition-all group-hover:drop-shadow-[0_0_8px_rgba(215,242,13,0.5)]"
+                      fill="none"
+                    >
+                      <path
+                        d={svgLogoSimplified.p3d1bf00}
+                        fill="#d7f20d"
+                        stroke="#d7f20d"
+                        strokeMiterlimit="10"
+                        strokeWidth="35.43"
+                      />
+                    </svg>
+                  </div>
+                </Link>
                 <span className="font-['Audiowide',cursive] text-[18px]">SOMO</span>
               </div>
               <p className="text-white/50 text-[14px] mb-4 font-['Geist',sans-serif]">Parceiros digitais para o seu negocio crescer.</p>
@@ -261,7 +297,7 @@ function LayoutInner() {
             <div>
               <h4 className="font-['Audiowide',cursive] text-[14px] text-[#d7f20d] mb-4 uppercase">Quick Links</h4>
               <div className="flex flex-col gap-2">
-                {["Home", "Servicos", "Portfolio", "Sobre"].map((item) => (
+                {["Somo", "Servicos", "Portfolio", "Sobre"].map((item) => (
                   <a key={item} href="#" className="text-white/60 text-[14px] hover:text-white transition-colors font-['Geist',sans-serif]">{item}</a>
                 ))}
               </div>

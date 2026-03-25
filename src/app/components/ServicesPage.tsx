@@ -1,4 +1,9 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+} from "react";
 import { Link } from "react-router";
 import {
   motion,
@@ -14,6 +19,7 @@ import {
   Share2,
   Video,
   BarChart3,
+  TrendingUp,
 } from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { usePageTransition } from "./PageTransitionContext";
@@ -67,7 +73,13 @@ function AnimatedCounter({
 }
 
 // ─── Node SVG Component (Ativo 38 - Infinity) ────────────────────────
-function NodeInfinity({ active, className = "" }: { active: boolean; className?: string }) {
+function NodeInfinity({
+  active,
+  className = "",
+}: {
+  active: boolean;
+  className?: string;
+}) {
   return (
     <motion.div
       className={`relative ${className}`}
@@ -75,25 +87,37 @@ function NodeInfinity({ active, className = "" }: { active: boolean; className?:
         scale: active ? [1, 1.15, 1] : 1,
         rotate: active ? [0, 10, 0] : 0,
       }}
-      transition={{ duration: 1.2, ease: "easeOut", repeat: active ? Infinity : 0, repeatDelay: 2 }}
-    >
-      
-    </motion.div>
+      transition={{
+        duration: 1.2,
+        ease: "easeOut",
+        repeat: active ? Infinity : 0,
+        repeatDelay: 2,
+      }}
+    ></motion.div>
   );
 }
 
 // ─── Node SVG Component (Ativo 41 - SOMO Symbol) ─────────────────────
-function NodeSomo({ active, className = "" }: { active: boolean; className?: string }) {
+function NodeSomo({
+  active,
+  className = "",
+}: {
+  active: boolean;
+  className?: string;
+}) {
   return (
     <motion.div
       className={`relative ${className}`}
       animate={{
         scale: active ? [1, 1.1, 1] : 1,
       }}
-      transition={{ duration: 1.5, ease: "easeOut", repeat: active ? Infinity : 0, repeatDelay: 2.5 }}
-    >
-      
-    </motion.div>
+      transition={{
+        duration: 1.5,
+        ease: "easeOut",
+        repeat: active ? Infinity : 0,
+        repeatDelay: 2.5,
+      }}
+    ></motion.div>
   );
 }
 
@@ -126,12 +150,17 @@ const services = [
     title: "Desenvolvimento Web",
     subtitle: "Sites & E-commerces",
     description:
-      "Desenvolvemos estruturas otimizadas para ranqueamento (SEO) e alta conversão. De landing pages a e-commerces robustos, cada projeto é pensado para transformar visitantes em clientes reais.",
+      "Sites ultrarrápidos projetados para converter. Não criamos apenas páginas, criamos máquinas de vendas otimizadas para o Google e preparadas para escala.",
     icon: Monitor,
     image:
-      "https://images.unsplash.com/photo-1761123044903-1671e0edc3f6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3ZWIlMjBkZXZlbG9wbWVudCUyMGxhcHRvcCUyMGNvZGV8ZW58MXx8fHwxNzcxMDA0MDY3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "https://images.unsplash.com/photo-1759661881353-5b9cc55e1cf4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3ZWIlMjBkZXZlbG9wbWVudCUyMGNvZGUlMjBzY3JlZW4lMjBkYXJrJTIwbmVvbnxlbnwxfHx8fDE3NzEwMTU2NDl8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     link: "/web",
-    highlights: ["Landing Pages", "Sites Institucionais", "E-commerce", "SEO"],
+    highlights: [
+      "Landing Pages",
+      "Sites Institucionais",
+      "E-commerce",
+      "SEO",
+    ],
     nodeType: "somo" as const,
   },
   {
@@ -139,12 +168,17 @@ const services = [
     title: "Social Media",
     subtitle: "Gestão & Estratégia",
     description:
-      "Estratégias de redes sociais baseadas em dados, focadas em engajamento real e crescimento orgânico. Criamos conteúdo que conecta, gerenciamos comunidades e impulsionamos resultados.",
+      "Transforme seguidores em comunidade ativa. Conteúdo proprietário e gestão data-driven para marcas que querem liderar a conversa, não apenas participar dela.",
     icon: Share2,
     image:
-      "https://images.unsplash.com/photo-1498926506265-166e25d0910a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzb2NpYWwlMjBtZWRpYSUyMG1hcmtldGluZyUyMGNyZWF0aXZlfGVufDF8fHx8MTc3MDk1NDE5NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "https://images.unsplash.com/photo-1745848413099-13adc3aaf308?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzb2NpYWwlMjBtZWRpYSUyMHN0cmF0ZWd5JTIwcGhvbmUlMjBkYXJrJTIwbW9vZHl8ZW58MXx8fHwxNzcxMDE1NjUwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     link: "/social",
-    highlights: ["Gestão de Redes", "Criação de Conteúdo", "Estratégia Digital", "Relatórios"],
+    highlights: [
+      "Gestão de Redes",
+      "Criação de Conteúdo",
+      "Estratégia Digital",
+      "Relatórios",
+    ],
     nodeType: "infinity" as const,
   },
   {
@@ -152,12 +186,17 @@ const services = [
     title: "Produção de Vídeos",
     subtitle: "Reels, Shorts & Mais",
     description:
-      "Produzimos vídeos que retêm atenção e geram resultados. De reels a vídeos institucionais, cada frame é pensado para engajar, converter e fortalecer sua marca no digital.",
+      "Ganhe a guerra pela atenção. Narrativas visuais dinâmicas criadas para parar o scroll e fixar sua marca na mente do consumidor nos primeiros 3 segundos.",
     icon: Video,
     image:
-      "https://images.unsplash.com/photo-1543235074-8257d766eb06?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx2aWRlbyUyMHByb2R1Y3Rpb24lMjBjYW1lcmElMjBmaWxtaW5nfGVufDF8fHx8MTc3MTAwNDA2N3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "https://images.unsplash.com/photo-1666858443985-fead1d59b4f7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx2aWRlbyUyMHByb2R1Y3Rpb24lMjBjaW5lbWElMjBkYXJrJTIwc3R1ZGlvfGVufDF8fHx8MTc3MTAxNTY1MHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     link: "/videos",
-    highlights: ["Reels & Shorts", "Vídeo Institucional", "Motion Graphics", "Edição"],
+    highlights: [
+      "Reels & Shorts",
+      "Vídeo Institucional",
+      "Motion Graphics",
+      "Edição",
+    ],
     nodeType: "somo" as const,
   },
   {
@@ -165,12 +204,89 @@ const services = [
     title: "CRM & Sistemas",
     subtitle: "Automação & Gestão",
     description:
-      "Nosso CRM centraliza dados, automatiza processos e oferece insights acionáveis. Ideal para equipes que querem escalar sem perder o controle, com integrações inteligentes.",
+      "O fim das planilhas. Centralize WhatsApp, E-mail e Vendas em um único sistema inteligente que trabalha enquanto você dorme.",
     icon: BarChart3,
     image:
-      "https://images.unsplash.com/photo-1759752394755-1241472b589d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGFuYWx5dGljcyUyMGRhc2hib2FyZCUyMHNjcmVlbnxlbnwxfHx8fDE3NzA5MTA2MjJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "https://images.unsplash.com/photo-1759661966728-4a02e3c6ed91?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGFuYWx5dGljcyUyMGRhdGElMjBkYXNoYm9hcmQlMjB0ZWNobm9sb2d5fGVufDF8fHx8MTc3MTAxNTY1M3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     link: "/crm",
-    highlights: ["Automação", "Dashboards", "Integrações", "Relatórios em tempo real"],
+    highlights: [
+      "Automação",
+      "Dashboards",
+      "Integrações",
+      "Relatórios em tempo real",
+    ],
+    nodeType: "infinity" as const,
+  },
+  {
+    id: "trafego",
+    title: "Tráfego Pago",
+    subtitle: "Ads & Performance",
+    description:
+      "ROI de 300%+ com campanhas data-driven. Não gastamos seu budget, multiplicamos ele. Google Ads, Meta Ads e estratégias de crescimento acelerado.",
+    icon: TrendingUp,
+    image:
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkaWdpdGFsJTIwbWFya2V0aW5nJTIwYWRzJTIwZGFzaGJvYXJkJTIwZ3JhcGhzfGVufDF8fHx8MTc3MTYxNTAwMHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+    link: "/trafego",
+    highlights: [
+      "Google Ads",
+      "Meta Ads",
+      "ROI 300%+",
+      "Segmentação Avançada",
+    ],
+    nodeType: "somo" as const,
+  },
+  {
+    id: "app-agendamento",
+    title: "App de Agendamento",
+    subtitle: "Calendário & Reservas",
+    description:
+      "Sistema completo de agendamento online com notificações automáticas. Reduza no-shows em 70% e aumente seu faturamento em até 300%.",
+    icon: BarChart3,
+    image:
+      "https://images.unsplash.com/photo-1722506724411-9d3ea21702c9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjB3b3Jrc3BhY2UlMjBkZXNrJTIwY2FsZW5kYXIlMjBwbGFubmVyfGVufDF8fHx8MTc3MTYxMDAwMXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+    link: "/servico-app-agendamento",
+    highlights: [
+      "Agenda Online 24/7",
+      "Notificações WhatsApp",
+      "Check-in Digital",
+      "Gestão Completa",
+    ],
+    nodeType: "infinity" as const,
+  },
+  {
+    id: "sistema-gestao",
+    title: "Sistema de Gestão",
+    subtitle: "ERP & Controle",
+    description:
+      "Plataforma all-in-one para gestão de projetos, finanças e equipes. Aumente sua margem de lucro em até 40% com controle total.",
+    icon: Monitor,
+    image:
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGFuYWx5dGljcyUyMGRhc2hib2FyZCUyMHNjcmVlbnN8ZW58MXx8fHwxNzcxNjEwMDAyfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+    link: "/servico-sistema-gestao",
+    highlights: [
+      "Dashboard Executivo",
+      "Gestão Financeira",
+      "Controle de Projetos",
+      "Relatórios Avançados",
+    ],
+    nodeType: "somo" as const,
+  },
+  {
+    id: "app-ecommerce",
+    title: "App E-commerce",
+    subtitle: "Mobile Shopping",
+    description:
+      "Experiência de compra mobile-first que converte. Checkout em 1 toque, busca visual AI e conversão até 180% maior que web.",
+    icon: Share2,
+    image:
+      "https://images.unsplash.com/photo-1663153203126-08bbadc178ad?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2JpbGUlMjBwaG9uZSUyMHNob3BwaW5nJTIwYXBwJTIwc2NyZWVuJTIwZGFya3xlbnwxfHx8fDE3NzE2MTA5Mjl8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+    link: "/servico-app-ecommerce",
+    highlights: [
+      "Checkout 1-Click",
+      "Busca Visual AI",
+      "Wishlist Social",
+      "Tracking Real-Time",
+    ],
     nodeType: "infinity" as const,
   },
 ];
@@ -187,72 +303,63 @@ export default function ServicesPage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const servicesRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
-  const bottomLogoRef = useRef<HTMLDivElement>(null);
   const { startTransition } = usePageTransition();
-  const [svgEndY, setSvgEndY] = useState(3200);
 
   // ─── Mouse Parallax ───────────────────────────────────────────────
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
   // Smoothed mouse values with spring
-  const smoothMouseX = useSpring(mouseX, { stiffness: 40, damping: 25, restDelta: 0.001 });
-  const smoothMouseY = useSpring(mouseY, { stiffness: 40, damping: 25, restDelta: 0.001 });
+  const smoothMouseX = useSpring(mouseX, {
+    stiffness: 20,
+    damping: 40,
+    restDelta: 0.001,
+  });
+  const smoothMouseY = useSpring(mouseY, {
+    stiffness: 20,
+    damping: 40,
+    restDelta: 0.001,
+  });
 
   // Different parallax intensities for layered depth
-  const parallaxLineX = useTransform(smoothMouseX, [-1, 1], [-18, 18]);
-  const parallaxLineY = useTransform(smoothMouseY, [-1, 1], [-12, 12]);
-  const parallaxBgX = useTransform(smoothMouseX, [-1, 1], [-30, 30]);
-  const parallaxBgY = useTransform(smoothMouseY, [-1, 1], [-20, 20]);
-  const parallaxFgX = useTransform(smoothMouseX, [-1, 1], [8, -8]);
-  const parallaxFgY = useTransform(smoothMouseY, [-1, 1], [5, -5]);
+  const parallaxBgX = useTransform(
+    smoothMouseX,
+    [-1, 1],
+    [-10, 10],
+  );
+  const parallaxBgY = useTransform(
+    smoothMouseY,
+    [-1, 1],
+    [-6, 6],
+  );
+  const parallaxFgX = useTransform(
+    smoothMouseX,
+    [-1, 1],
+    [3, -3],
+  );
+  const parallaxFgY = useTransform(
+    smoothMouseY,
+    [-1, 1],
+    [2, -2],
+  );
 
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (!containerRef.current) return;
-    const { clientX, clientY } = e;
-    const { innerWidth, innerHeight } = window;
-    // Normalize to -1 to 1
-    mouseX.set((clientX / innerWidth) * 2 - 1);
-    mouseY.set((clientY / innerHeight) * 2 - 1);
-  }, [mouseX, mouseY]);
-
-  // Dynamically calculate where the bottom logo card is in SVG viewBox coordinates
-  useEffect(() => {
-    const update = () => {
-      if (bottomLogoRef.current && containerRef.current) {
-        const containerHeight = containerRef.current.scrollHeight;
-        const containerRect = containerRef.current.getBoundingClientRect();
-        const cardRect = bottomLogoRef.current.getBoundingClientRect();
-        const scrollTop = window.scrollY || document.documentElement.scrollTop;
-        // Absolute positions accounting for scroll
-        const containerAbsTop = containerRect.top + scrollTop;
-        const cardAbsCenter = cardRect.top + scrollTop + cardRect.height / 2;
-        // Relative to container
-        const relativeCenter = cardAbsCenter - containerAbsTop;
-        // Map to viewBox (0-4000)
-        const mapped = Math.round((relativeCenter / containerHeight) * 4000);
-        setSvgEndY(mapped);
-      }
-    };
-    update();
-    // Recalculate on resize and after images load
-    window.addEventListener("resize", update);
-    const timer = setTimeout(update, 500);
-    const timer2 = setTimeout(update, 1500);
-    const timer3 = setTimeout(update, 3000);
-    return () => {
-      window.removeEventListener("resize", update);
-      clearTimeout(timer);
-      clearTimeout(timer2);
-      clearTimeout(timer3);
-    };
-  }, []);
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent) => {
+      if (!containerRef.current) return;
+      const { clientX, clientY } = e;
+      const { innerWidth, innerHeight } = window;
+      // Normalize to -1 to 1
+      mouseX.set((clientX / innerWidth) * 2 - 1);
+      mouseY.set((clientY / innerHeight) * 2 - 1);
+    },
+    [mouseX, mouseY],
+  );
 
   // Handler for shared element transition
   const handleServiceClick = (
     e: React.MouseEvent,
-    service: typeof services[0],
-    cardRef: React.RefObject<HTMLDivElement | null>
+    service: (typeof services)[0],
+    cardRef: React.RefObject<HTMLDivElement | null>,
   ) => {
     e.preventDefault();
     if (!cardRef.current) return;
@@ -266,23 +373,23 @@ export default function ServicesPage() {
     });
   };
 
-  // Main scroll progress for the whole page
+  // Main scroll progress - instant response with smooth animation
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
+    layoutEffect: false
   });
 
-  // Smooth spring for the line
+  // Scroll progress animation - copied from BlogDetailPage
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 60,
-    damping: 20,
+    stiffness: 50,
+    damping: 25,
     restDelta: 0.001,
   });
 
-  // Single unified line driven by overall page scroll
-  const servicesPathLength = useSpring(
-    useTransform(smoothProgress, [0.18, 0.85], [0, 1]),
-    { stiffness: 60, damping: 20 }
+  const pathLength = useSpring(
+    useTransform(smoothProgress, [0.1, 0.9], [0, 1]),
+    { stiffness: 50, damping: 25 }
   );
 
   // Stats section inView tracking
@@ -294,53 +401,42 @@ export default function ServicesPage() {
   const svc1Ref = useRef<HTMLDivElement>(null);
   const svc2Ref = useRef<HTMLDivElement>(null);
   const svc3Ref = useRef<HTMLDivElement>(null);
-  const svcRefs = [svc0Ref, svc1Ref, svc2Ref, svc3Ref];
+  const svc4Ref = useRef<HTMLDivElement>(null);
+  const svc5Ref = useRef<HTMLDivElement>(null);
+  const svc6Ref = useRef<HTMLDivElement>(null);
+  const svc7Ref = useRef<HTMLDivElement>(null);
+  const svcRefs = [svc0Ref, svc1Ref, svc2Ref, svc3Ref, svc4Ref, svc5Ref, svc6Ref, svc7Ref];
   const svc0InView = useInView(svc0Ref, { amount: 0.3 });
   const svc1InView = useInView(svc1Ref, { amount: 0.3 });
   const svc2InView = useInView(svc2Ref, { amount: 0.3 });
   const svc3InView = useInView(svc3Ref, { amount: 0.3 });
-  const svcInView = [svc0InView, svc1InView, svc2InView, svc3InView];
+  const svc4InView = useInView(svc4Ref, { amount: 0.3 });
+  const svc5InView = useInView(svc5Ref, { amount: 0.3 });
+  const svc6InView = useInView(svc6Ref, { amount: 0.3 });
+  const svc7InView = useInView(svc7Ref, { amount: 0.3 });
+  const svcInView = [
+    svc0InView,
+    svc1InView,
+    svc2InView,
+    svc3InView,
+    svc4InView,
+    svc5InView,
+    svc6InView,
+    svc7InView,
+  ];
 
   // CTA inView
   const ctaInView = useInView(ctaRef, { amount: 0.5 });
 
-  // Build SVG path dynamically so it always ends at the bottom logo card
-  const dynamicPath = (() => {
-    const base = 3140; // y where the last zigzag segment starts
-    const totalSpan = Math.max(svgEndY - base, 200);
-    const s = totalSpan / 410; // scale relative to original 410-unit span
-
-    const y1 = Math.round(base + 40 * s);
-    const y2 = Math.round(base + 100 * s);
-    const y3 = Math.round(base + 140 * s);
-    const y4 = Math.round(base + 260 * s);
-    const y5 = Math.round(base + 300 * s);
-    const y6 = Math.round(base + 360 * s);
-
-    return `M 600,1000
-       L 600,1400
-       L 600,1600
-       C 600,1680 600,1720 750,1780
-       L 900,1860
-       C 1020,1910 1020,1950 900,2000
-       L 600,2120
-       C 480,2170 480,2210 480,2250
-       L 480,2300
-       C 480,2350 400,2400 300,2450
-       L 200,2500
-       C 120,2540 120,2600 200,2640
-       L 600,2780
-       C 700,2820 700,2860 700,2900
-       L 700,2950
-       C 700,3000 780,3050 900,3100
-       L 1000,${base}
-       C 1080,${y1} 1080,${y2} 1000,${y3}
-       L 600,${y4}
-       C 500,${y5} 500,${y6} 600,${svgEndY}`;
-  })();
+  // Bottom logo ref
+  const bottomLogoRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div ref={containerRef} className="bg-[#0a0a0a] min-h-screen relative overflow-hidden" onMouseMove={handleMouseMove}>
+    <div
+      ref={containerRef}
+      className="relative bg-[#0a0a0a] min-h-screen overflow-hidden"
+      onMouseMove={handleMouseMove}
+    >
       {/* ─── Parallax Background Grid (deepest layer) ─── */}
       <motion.div
         className="hidden md:block absolute inset-0 pointer-events-none z-0"
@@ -363,24 +459,23 @@ export default function ServicesPage() {
         <div className="absolute bottom-[20%] left-[30%] w-[300px] h-[300px] rounded-full bg-[#d7f20d]/[0.015] blur-[90px]" />
       </motion.div>
 
-      {/* ─── Global Unified Neon Line (Desktop only) — parallax mid-layer ─── */}
-      <motion.div
+      {/* ─── Global Unified Neon Line (Desktop only) — static layer ─── */}
+      <div
         className="hidden md:block absolute inset-0 pointer-events-none z-[1]"
-        style={{ x: parallaxLineX, y: parallaxLineY }}
       >
         <svg
           className="absolute left-0 top-0 w-full h-full"
           preserveAspectRatio="none"
-          viewBox="0 0 1200 4000"
+          viewBox="0 0 1200 1200"
           fill="none"
         >
           <defs>
-            <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="6" result="blur" />
+            <filter id="serviceNeonGlow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="4" result="blur" />
               <feComposite in="SourceGraphic" in2="blur" operator="over" />
             </filter>
-            <filter id="bigGlow" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="12" result="blur" />
+            <filter id="serviceBigGlow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="8" result="blur" />
               <feMerge>
                 <feMergeNode in="blur" />
                 <feMergeNode in="SourceGraphic" />
@@ -390,29 +485,55 @@ export default function ServicesPage() {
 
           {/* Background glow path */}
           <motion.path
-            d={dynamicPath}
+            d="M 600,200
+               L 600,300
+               Q 600,380 680,420
+               L 800,480
+               Q 880,520 800,560
+               L 600,640
+               Q 540,670 520,720
+               L 520,760
+               Q 520,810 440,850
+               L 360,890
+               Q 300,920 360,950
+               L 600,1040
+               Q 660,1070 680,1120
+               L 680,1150"
             stroke="#d7f20d"
-            strokeWidth="8"
+            strokeWidth="6"
             strokeLinecap="round"
             fill="none"
-            opacity="0.1"
-            style={{ pathLength: servicesPathLength }}
-            filter="url(#bigGlow)"
+            opacity="0.08"
+            style={{ pathLength: pathLength }}
+            filter="url(#serviceBigGlow)"
           />
 
           {/* Main energy path */}
           <motion.path
-            d={dynamicPath}
+            d="M 600,200
+               L 600,300
+               Q 600,380 680,420
+               L 800,480
+               Q 880,520 800,560
+               L 600,640
+               Q 540,670 520,720
+               L 520,760
+               Q 520,810 440,850
+               L 360,890
+               Q 300,920 360,950
+               L 600,1040
+               Q 660,1070 680,1120
+               L 680,1150"
             stroke="#d7f20d"
-            strokeWidth="2"
+            strokeWidth="1.5"
             strokeLinecap="round"
             fill="none"
-            opacity="0.8"
-            style={{ pathLength: servicesPathLength }}
-            filter="url(#neonGlow)"
+            opacity="0.6"
+            style={{ pathLength: pathLength }}
+            filter="url(#serviceNeonGlow)"
           />
         </svg>
-      </motion.div>
+      </div>
 
       {/* ─── Parallax Foreground Particles (shallowest layer, inverse) ─── */}
       <motion.div
@@ -435,8 +556,8 @@ export default function ServicesPage() {
             className="absolute rounded-full bg-[#d7f20d]"
             style={{
               top: dot.top,
-              left: 'left' in dot ? dot.left : undefined,
-              right: 'right' in dot ? dot.right : undefined,
+              left: "left" in dot ? dot.left : undefined,
+              right: "right" in dot ? dot.right : undefined,
               width: dot.size,
               height: dot.size,
             }}
@@ -455,7 +576,7 @@ export default function ServicesPage() {
       </motion.div>
 
       {/* ───────────── HERO: "A Origem" ───────────── */}
-      <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
+      <section className="relative z-[5] min-h-[80vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <ImageWithFallback
             src="https://images.unsplash.com/photo-1758520144667-3041caeff3c1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkaWdpdGFsJTIwYWdlbmN5JTIwc2VydmljZXMlMjBkYXJrfGVufDF8fHx8MTc3MTAwNDA2Nnww&ixlib=rb-4.1.0&q=80&w=1080"
@@ -475,70 +596,91 @@ export default function ServicesPage() {
           <motion.span
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+            transition={{
+              duration: 0.6,
+              delay: 0.2,
+              ease: "easeOut",
+            }}
             className="inline-block bg-[#d7f20d]/10 border border-[#d7f20d]/30 text-[#d7f20d] px-5 py-2 rounded-full font-['Audiowide',cursive] text-[12px] uppercase tracking-widest mb-8"
           >
             O Circuito de Crescimento
           </motion.span>
 
           <h1 className="font-['Audiowide',cursive] text-[clamp(36px,6vw,72px)] text-white uppercase tracking-[-0.03em] leading-[1.1] mb-8">
-            Tudo que seu{" "}
-            <span className="text-[#d7f20d]">negócio</span> precisa
-            <br className="hidden md:block" /> em um só{" "}
-            <span className="text-[#d7f20d]">lugar</span>
+            Do Pixel ao Código.{" "}
+            <br className="hidden md:block" />
+            Do Lead à{" "}
+            <span className="text-[#d7f20d]">Venda</span>.
           </h1>
 
           <p className="text-white/60 font-['Geist',sans-serif] text-[clamp(16px,2vw,20px)] max-w-2xl mx-auto leading-relaxed">
-            Da estratégia à execução, cobrimos todas as frentes do digital para
-            transformar sua presença online em resultados concretos.
+            Uma stack completa de soluções digitais orquestrada
+            para escalar sua operação.
           </p>
         </motion.div>
-
-
       </section>
 
       {/* ─── SOMO Logo Card — glued to line start ─── */}
       <motion.div
-        className="relative z-[2] flex flex-col items-center -mt-10 mb-0"
+        className="relative z-[5] flex flex-col items-center -mt-10 mb-0"
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}
+        transition={{
+          duration: 0.6,
+          delay: 0.5,
+          ease: "easeOut",
+        }}
       >
         {/* Card — origin point of the line */}
         <TiltCard tiltMaxX={5} tiltMaxY={5} scale={1.01}>
-        <div className="relative backdrop-blur-[15px] bg-[rgba(255,255,255,0.03)] shadow-[0px_8px_24px_0px_rgba(0,0,0,0.5)] border border-white/10 rounded-3xl p-6 overflow-hidden">
-          {/* Neon top accent line */}
-          <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#d7f20d]/30 to-transparent" />
-          {/* Neon bottom accent line */}
-          <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#d7f20d]/30 to-transparent" />
-          <motion.svg
-            viewBox="0 0 853.109 167.667"
-            className="w-[70px] h-auto"
-            fill="none"
-            animate={{ scale: [1, 1.08, 1] }}
-            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <path d={svgSomoLogo.p2dc09800} fill="#d7f20d" />
-            <path d={svgSomoLogo.p310bd00} fill="#d7f20d" />
-            <path d={svgSomoLogo.p1cd15770} fill="#d7f20d" />
-            <path d={svgSomoLogo.p1fbcdc00} fill="#d7f20d" />
-          </motion.svg>
-        </div>
+          <div className="relative backdrop-blur-[15px] bg-[rgba(255,255,255,0.03)] shadow-[0px_8px_24px_0px_rgba(0,0,0,0.5)] border border-white/10 rounded-3xl p-6 overflow-hidden">
+            {/* Neon top accent line */}
+            <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#d7f20d]/30 to-transparent" />
+            {/* Neon bottom accent line */}
+            <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#d7f20d]/30 to-transparent" />
+            <motion.svg
+              viewBox="0 0 853.109 167.667"
+              className="w-[70px] h-auto"
+              fill="none"
+              animate={{ scale: [1, 1.08, 1] }}
+              transition={{
+                duration: 2.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            >
+              <path d={svgSomoLogo.p2dc09800} fill="#d7f20d" />
+              <path d={svgSomoLogo.p310bd00} fill="#d7f20d" />
+              <path d={svgSomoLogo.p1cd15770} fill="#d7f20d" />
+              <path d={svgSomoLogo.p1fbcdc00} fill="#d7f20d" />
+            </motion.svg>
+          </div>
         </TiltCard>
 
         {/* Line exiting card downward — starts exactly at card bottom */}
         <div className="flex flex-col items-center">
           <motion.div
             className="w-3 h-3 rounded-full bg-[#d7f20d] shadow-[0_0_18px_6px_rgba(215,242,13,0.5)] shrink-0"
-            animate={{ scale: [1, 1.4, 1], opacity: [0.8, 1, 0.8] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            animate={{
+              scale: [1, 1.4, 1],
+              opacity: [0.8, 1, 0.8],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
           />
           <motion.div
             className="w-[2px] origin-top"
             style={{ height: "12vh" }}
             initial={{ scaleY: 0 }}
             animate={{ scaleY: 1 }}
-            transition={{ duration: 1.2, delay: 0.8, ease: "easeOut" }}
+            transition={{
+              duration: 1.2,
+              delay: 0.8,
+              ease: "easeOut",
+            }}
           >
             <div className="w-full h-full bg-gradient-to-b from-[#d7f20d]/60 via-[#d7f20d]/25 to-transparent" />
           </motion.div>
@@ -546,7 +688,7 @@ export default function ServicesPage() {
       </motion.div>
 
       {/* ───────────── STATS: "O Pulso" ───────────── */}
-      <section className="relative z-10 px-6 py-4 -mt-[6vh]">
+      <section className="relative z-[5] px-6 py-4 -mt-[6vh]">
         <motion.div
           ref={statsRef}
           initial={{ opacity: 0, y: 30 }}
@@ -567,40 +709,47 @@ export default function ServicesPage() {
           </motion.div>
 
           <TiltCard tiltMaxX={4} tiltMaxY={5} scale={1.01}>
-          <div className="bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-2xl p-6 md:p-10 relative overflow-hidden">
-            {/* Neon top accent */}
-            <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#d7f20d]/50 to-transparent" />
+            <div className="bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-2xl p-6 md:p-10 relative overflow-hidden">
+              {/* Neon top accent */}
+              <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#d7f20d]/50 to-transparent" />
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-              {stats.map((stat, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ amount: 0.2 }}
-                  transition={{ duration: 0.5, delay: i * 0.15, ease: "easeOut" }}
-                  className="text-center relative z-10"
-                >
-                  <GlowDot active={statsInView} />
-                  <p className="font-['Audiowide',cursive] text-[clamp(32px,5vw,48px)] text-white leading-none mt-4">
-                    <AnimatedCounter
-                      value={stat.value}
-                      suffix={stat.suffix}
-                    />
-                  </p>
-                  <p className="text-white/40 font-['Geist',sans-serif] text-[13px] mt-3 uppercase tracking-wider">
-                    {stat.label}
-                  </p>
-                </motion.div>
-              ))}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+                {stats.map((stat, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ amount: 0.2 }}
+                    transition={{
+                      duration: 0.5,
+                      delay: i * 0.15,
+                      ease: "easeOut",
+                    }}
+                    className="text-center relative z-10"
+                  >
+                    <GlowDot active={statsInView} />
+                    <p className="font-['Audiowide',cursive] text-[clamp(32px,5vw,48px)] text-white leading-none mt-4">
+                      <AnimatedCounter
+                        value={stat.value}
+                        suffix={stat.suffix}
+                      />
+                    </p>
+                    <p className="text-white/40 font-['Geist',sans-serif] text-[13px] mt-3 uppercase tracking-wider">
+                      {stat.label}
+                    </p>
+                  </motion.div>
+                ))}
+              </div>
             </div>
-          </div>
           </TiltCard>
         </motion.div>
       </section>
 
       {/* ───────────── SERVICES: "Os Conectores" ───────────── */}
-      <section ref={servicesRef} className="relative py-10 md:py-16 px-6">
+      <section
+        ref={servicesRef}
+        className="relative z-[5] py-10 md:py-16 px-6"
+      >
         <div className="max-w-6xl mx-auto relative z-10">
           {/* Section Title */}
           <motion.div
@@ -611,10 +760,12 @@ export default function ServicesPage() {
             className="text-center mb-4 md:mb-6"
           >
             <h2 className="font-['Audiowide',cursive] text-white text-[clamp(28px,4vw,48px)] uppercase tracking-tight leading-tight">
-              Nossos <span className="text-[#d7f20d]">Serviços</span>
+              Nossos{" "}
+              <span className="text-[#d7f20d]">Serviços</span>
             </h2>
             <p className="text-white/40 font-['Geist',sans-serif] text-[16px] mt-4 max-w-lg mx-auto">
-              Cada conexão é um passo rumo ao crescimento do seu negócio digital.
+              Cada conexão é um passo rumo ao crescimento do seu
+              negócio digital.
             </p>
           </motion.div>
 
@@ -632,7 +783,10 @@ export default function ServicesPage() {
                       initial={{ opacity: 0, scale: 0.6 }}
                       whileInView={{ opacity: 1, scale: 1 }}
                       viewport={{ amount: 0.5 }}
-                      transition={{ duration: 0.6, ease: "easeOut" }}
+                      transition={{
+                        duration: 0.6,
+                        ease: "easeOut",
+                      }}
                       className="flex flex-col items-center py-4 md:py-6 relative"
                     >
                       {/* Top line */}
@@ -641,7 +795,10 @@ export default function ServicesPage() {
                         initial={{ scaleY: 0 }}
                         whileInView={{ scaleY: 1 }}
                         viewport={{ amount: 0.5 }}
-                        transition={{ duration: 0.4, ease: "easeOut" }}
+                        transition={{
+                          duration: 0.4,
+                          ease: "easeOut",
+                        }}
                       />
                       {/* Chain Link Icon — SOMO Infinity rotated */}
                       <motion.div
@@ -650,7 +807,11 @@ export default function ServicesPage() {
                           rotate: [0, 5, -5, 0],
                           scale: [1, 1.05, 1],
                         }}
-                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                        transition={{
+                          duration: 4,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }}
                       >
                         <svg
                           viewBox="0 0 703.19 389.95"
@@ -672,165 +833,178 @@ export default function ServicesPage() {
                         initial={{ scaleY: 0 }}
                         whileInView={{ scaleY: 1 }}
                         viewport={{ amount: 0.5 }}
-                        transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
+                        transition={{
+                          duration: 0.4,
+                          delay: 0.2,
+                          ease: "easeOut",
+                        }}
                       />
                     </motion.div>
                   )}
 
                   {/* ─── Service Card ─── */}
-                  <TiltCard tiltMaxX={6} tiltMaxY={6} scale={1.015}>
-                  <motion.div
-                    ref={svcRefs[index]}
-                    initial={{ opacity: 0, y: 60 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ amount: 0.15 }}
-                    transition={{ duration: 0.8, ease: "easeOut" }}
-                    className={`flex flex-col ${
-                      isEven ? "md:flex-row" : "md:flex-row-reverse"
-                    } gap-8 md:gap-0 items-center relative backdrop-blur-[15px] bg-[rgba(255,255,255,0.03)] shadow-[0px_8px_24px_0px_rgba(0,0,0,0.5)] border border-white/10 rounded-3xl p-4 md:p-6 overflow-hidden`}
+                  <TiltCard
+                    tiltMaxX={4}
+                    tiltMaxY={4}
+                    scale={1.01}
                   >
-                    {/* Neon top accent line */}
-                    <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#d7f20d]/30 to-transparent" />
+                    <motion.div
+                      ref={svcRefs[index]}
+                      initial={{ opacity: 0, y: 40 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ amount: 0.15, once: true }}
+                      transition={{
+                        duration: 0.6,
+                        ease: "easeOut",
+                      }}
+                      className={`flex flex-col ${
+                        isEven
+                          ? "md:flex-row"
+                          : "md:flex-row-reverse"
+                      } gap-8 md:gap-0 items-center relative backdrop-blur-[120px] bg-[rgba(255,255,255,0.12)] shadow-[0px_12px_48px_0px_rgba(0,0,0,0.8),0px_0px_4px_0px_rgba(215,242,13,0.25),inset_0px_1px_2px_0px_rgba(255,255,255,0.15)] border border-white/40 rounded-3xl p-4 md:p-6 overflow-hidden will-change-transform`}
+                      style={{ position: "relative" }}
+                    >
+                      {/* Neon top accent line */}
+                      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#d7f20d]/30 to-transparent" />
 
-                    {/* Image Side */}
-                    <div className="w-full md:w-[48%]">
-                      <Link
-                        to={service.link}
-                        className="block group"
-                        onClick={(e) => handleServiceClick(e, service, svcRefs[index])}
-                      >
-                        <div className="relative rounded-3xl overflow-hidden aspect-[4/3]">
-                          <ImageWithFallback
-                            src={service.image}
-                            alt={service.title}
-                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-
-                          {/* Floating service icon */}
-                          <motion.div
-                            className="absolute top-6 left-6 w-14 h-14 rounded-2xl bg-[#d7f20d] flex items-center justify-center shadow-lg shadow-[#d7f20d]/20"
-                            animate={
-                              isActive
-                                ? { boxShadow: ["0 0 20px rgba(215,242,13,0.2)", "0 0 40px rgba(215,242,13,0.5)", "0 0 20px rgba(215,242,13,0.2)"] }
-                                : {}
-                            }
-                            transition={{ duration: 2, repeat: Infinity }}
-                          >
-                            <service.icon size={24} className="text-[#0a0a0a]" />
-                          </motion.div>
-                        </div>
-                      </Link>
-                    </div>
-
-                    {/* Center Node (Desktop) */}
-                    <div className="hidden md:flex w-[4%] flex-col items-center justify-center relative">
-                      <div className="relative">
-                        {service.nodeType === "somo" ? (
-                          <NodeSomo active={isActive} className="w-12 h-12" />
-                        ) : (
-                          <NodeInfinity active={isActive} className="w-14 h-8" />
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Content Side */}
-                    <div className="w-full md:w-[48%] md:px-8">
-                      {/* Mobile node */}
-                      <div className="flex md:hidden items-center gap-4 mb-6">
-                        <div className="w-8 h-8">
-                          {service.nodeType === "somo" ? (
-                            <NodeSomo active={isActive} className="w-full h-full" />
-                          ) : (
-                            <NodeInfinity active={isActive} className="w-full h-full" />
-                          )}
-                        </div>
-                        <span className="font-['Audiowide',cursive] text-[#d7f20d] text-[14px]">
-                          0{index + 1}
-                        </span>
-                        <div className="flex-1 h-[1px] bg-gradient-to-r from-[#d7f20d]/30 to-transparent" />
-                      </div>
-
-                      <motion.span
-                        className="text-[#d7f20d] font-['Audiowide',cursive] text-[12px] uppercase tracking-widest mb-3 block"
-                        initial={{ opacity: 0, x: isEven ? 30 : -30 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ amount: 0.3 }}
-                        transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
-                      >
-                        {service.subtitle}
-                      </motion.span>
-
-                      <motion.h3
-                        className="font-['Audiowide',cursive] text-white text-[clamp(26px,3.5vw,40px)] uppercase tracking-tight leading-[1.15] mb-6 relative"
-                        initial={{ opacity: 0, x: isEven ? 30 : -30 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ amount: 0.3 }}
-                        transition={{ duration: 0.5, delay: 0.3, ease: "easeOut" }}
-                      >
-                        {service.title}
-                        <motion.div
-                          className="absolute -bottom-2 left-0 h-[2px] bg-[#d7f20d]/50 rounded-full"
-                          initial={{ width: 0 }}
-                          whileInView={{ width: "60%" }}
-                          viewport={{ amount: 0.3 }}
-                          transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
-                        />
-                      </motion.h3>
-
-                      <motion.p
-                        className="text-white/50 font-['Geist',sans-serif] text-[16px] leading-relaxed mb-8"
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ amount: 0.3 }}
-                        transition={{ duration: 0.5, delay: 0.4, ease: "easeOut" }}
-                      >
-                        {service.description}
-                      </motion.p>
-
-                      {/* Highlights */}
-                      <motion.div
-                        className="flex flex-wrap gap-3 mb-10"
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        viewport={{ amount: 0.3 }}
-                        transition={{ duration: 0.5, delay: 0.5, ease: "easeOut" }}
-                      >
-                        {service.highlights.map((highlight, hi) => (
-                          <motion.span
-                            key={highlight}
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ amount: 0.3 }}
-                            transition={{ duration: 0.3, delay: 0.5 + hi * 0.1, ease: "easeOut" }}
-                            className="bg-white/5 border border-white/10 text-white/70 px-4 py-2 rounded-full text-[13px] font-['Geist',sans-serif] hover:border-[#d7f20d]/30 hover:text-[#d7f20d]/80 transition-colors"
-                          >
-                            {highlight}
-                          </motion.span>
-                        ))}
-                      </motion.div>
-
-                      {/* CTA */}
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ amount: 0.3 }}
-                        transition={{ duration: 0.5, delay: 0.6, ease: "easeOut" }}
-                      >
+                      {/* Image Side */}
+                      <div className="w-full md:w-[48%]">
                         <Link
                           to={service.link}
-                          className="inline-flex items-center gap-3 bg-[#d7f20d] text-[#0a0a0a] px-8 py-4 rounded-xl font-['Audiowide',cursive] text-[14px] uppercase tracking-wide hover:bg-[#c5e00c] transition-all shadow-lg shadow-[#d7f20d]/10 hover:shadow-[#d7f20d]/20 hover:-translate-y-1 transform group"
-                          onClick={(e) => handleServiceClick(e, service, svcRefs[index])}
+                          className="block group"
+                          onClick={(e) =>
+                            handleServiceClick(
+                              e,
+                              service,
+                              svcRefs[index],
+                            )
+                          }
                         >
-                          Saiba mais
-                          <ArrowRight
-                            size={18}
-                            className="group-hover:translate-x-1 transition-transform"
-                          />
+                          <div className="relative rounded-3xl overflow-hidden aspect-[4/3]">
+                            <ImageWithFallback
+                              src={service.image}
+                              alt={service.title}
+                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+
+                            {/* Floating service icon */}
+                            <motion.div
+                              className="absolute top-6 left-6 w-14 h-14 rounded-2xl bg-[#d7f20d] flex items-center justify-center shadow-lg shadow-[#d7f20d]/20"
+                              animate={
+                                isActive
+                                  ? {
+                                      boxShadow: [
+                                        "0 0 20px rgba(215,242,13,0.2)",
+                                        "0 0 40px rgba(215,242,13,0.5)",
+                                        "0 0 20px rgba(215,242,13,0.2)",
+                                      ],
+                                    }
+                                  : {}
+                              }
+                              transition={{
+                                duration: 2,
+                                repeat: Infinity,
+                              }}
+                            >
+                              <service.icon
+                                size={24}
+                                className="text-[#0a0a0a]"
+                              />
+                            </motion.div>
+                          </div>
                         </Link>
-                      </motion.div>
-                    </div>
-                  </motion.div>
+                      </div>
+
+                      {/* Center Node (Desktop) */}
+                      <div className="hidden md:flex w-[4%] flex-col items-center justify-center relative">
+                        <div className="relative">
+                          {service.nodeType === "somo" ? (
+                            <NodeSomo
+                              active={isActive}
+                              className="w-12 h-12"
+                            />
+                          ) : (
+                            <NodeInfinity
+                              active={isActive}
+                              className="w-14 h-8"
+                            />
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Content Side */}
+                      <div className="w-full md:w-[48%] md:px-8">
+                        {/* Mobile node */}
+                        <div className="flex md:hidden items-center gap-4 mb-6">
+                          <div className="w-8 h-8">
+                            {service.nodeType === "somo" ? (
+                              <NodeSomo
+                                active={isActive}
+                                className="w-full h-full"
+                              />
+                            ) : (
+                              <NodeInfinity
+                                active={isActive}
+                                className="w-full h-full"
+                              />
+                            )}
+                          </div>
+                          <span className="font-['Audiowide',cursive] text-[#d7f20d] text-[14px]">
+                            0{index + 1}
+                          </span>
+                          <div className="flex-1 h-[1px] bg-gradient-to-r from-[#d7f20d]/30 to-transparent" />
+                        </div>
+
+                        <span className="text-[#d7f20d] font-['Audiowide',cursive] text-[12px] uppercase tracking-widest mb-3 block">
+                          {service.subtitle}
+                        </span>
+
+                        <h3 className="font-['Audiowide',cursive] text-white text-[clamp(26px,3.5vw,40px)] uppercase tracking-tight leading-[1.15] mb-6 relative">
+                          {service.title}
+                          <div className="absolute -bottom-2 left-0 h-[2px] w-[60%] bg-[#d7f20d]/50 rounded-full" />
+                        </h3>
+
+                        <p className="text-white/50 font-['Geist',sans-serif] text-[16px] leading-relaxed mb-8">
+                          {service.description}
+                        </p>
+
+                        {/* Highlights */}
+                        <div className="flex flex-wrap gap-3 mb-10">
+                          {service.highlights.map(
+                            (highlight) => (
+                              <span
+                                key={highlight}
+                                className="bg-white/5 border border-white/10 text-white/70 px-4 py-2 rounded-full text-[13px] font-['Geist',sans-serif] hover:border-[#d7f20d]/30 hover:text-[#d7f20d]/80 transition-colors"
+                              >
+                                {highlight}
+                              </span>
+                            ),
+                          )}
+                        </div>
+
+                        {/* CTA */}
+                        <div>
+                          <Link
+                            to={service.link}
+                            className="inline-flex items-center gap-3 bg-[#d7f20d] text-[#0a0a0a] px-8 py-4 rounded-xl font-['Audiowide',cursive] text-[14px] uppercase tracking-wide hover:bg-[#c5e00c] transition-all shadow-lg shadow-[#d7f20d]/10 hover:shadow-[#d7f20d]/20 hover:-translate-y-1 transform group"
+                            onClick={(e) =>
+                              handleServiceClick(
+                                e,
+                                service,
+                                svcRefs[index],
+                              )
+                            }
+                          >
+                            Ver detalhes da solução
+                            <ArrowRight
+                              size={18}
+                              className="group-hover:translate-x-1 transition-transform"
+                            />
+                          </Link>
+                        </div>
+                      </div>
+                    </motion.div>
                   </TiltCard>
                 </div>
               );
@@ -858,7 +1032,10 @@ export default function ServicesPage() {
                   initial={{ scaleY: 0 }}
                   whileInView={{ scaleY: 1 }}
                   viewport={{ amount: 0.5 }}
-                  transition={{ duration: 0.4, ease: "easeOut" }}
+                  transition={{
+                    duration: 0.4,
+                    ease: "easeOut",
+                  }}
                 />
                 {/* Chain Link Icon */}
                 <motion.div
@@ -867,10 +1044,25 @@ export default function ServicesPage() {
                     rotate: [0, 5, -5, 0],
                     scale: [1, 1.05, 1],
                   }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
                 >
-                  
-                  
+                  <svg
+                    viewBox="0 0 703.19 389.95"
+                    className="w-10 h-6 md:w-14 md:h-8 rotate-[135deg]"
+                    fill="none"
+                  >
+                    <path
+                      d={svgChainLink.p3d1bf00}
+                      fill="#d7f20d"
+                      stroke="#d7f20d"
+                      strokeMiterlimit="10"
+                      strokeWidth="20"
+                    />
+                  </svg>
                 </motion.div>
                 {/* Bottom line */}
                 <motion.div
@@ -878,7 +1070,11 @@ export default function ServicesPage() {
                   initial={{ scaleY: 0 }}
                   whileInView={{ scaleY: 1 }}
                   viewport={{ amount: 0.5 }}
-                  transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
+                  transition={{
+                    duration: 0.4,
+                    delay: 0.2,
+                    ease: "easeOut",
+                  }}
                 />
               </motion.div>
 
@@ -892,39 +1088,69 @@ export default function ServicesPage() {
                   viewport={{ amount: 0.3 }}
                   transition={{ duration: 1, ease: "easeOut" }}
                 >
-                  
+                  <div className="w-full h-full bg-gradient-to-b from-[#d7f20d]/60 via-[#d7f20d]/25 to-transparent" />
                 </motion.div>
                 {/* Pulsating dot */}
-                
+                <motion.div
+                  className="w-3 h-3 rounded-full bg-[#d7f20d] shadow-[0_0_18px_6px_rgba(215,242,13,0.5)] shrink-0"
+                  animate={{
+                    scale: [1, 1.4, 1],
+                    opacity: [0.8, 1, 0.8],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                />
               </div>
 
               {/* SOMO Logo Card — destination point */}
               <TiltCard tiltMaxX={5} tiltMaxY={5} scale={1.01}>
-              <motion.div
-                ref={bottomLogoRef}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ amount: 0.3 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-                className="relative backdrop-blur-[15px] bg-[rgba(255,255,255,0.03)] shadow-[0px_8px_24px_0px_rgba(0,0,0,0.5)] border border-white/10 rounded-3xl p-6 overflow-hidden"
-              >
-                {/* Neon top accent line */}
-                <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#d7f20d]/30 to-transparent" />
-                {/* Neon bottom accent line */}
-                <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#d7f20d]/30 to-transparent" />
-                <motion.svg
-                  viewBox="0 0 853.109 167.667"
-                  className="w-[70px] h-auto"
-                  fill="none"
-                  animate={{ scale: [1, 1.08, 1] }}
-                  transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                <motion.div
+                  ref={bottomLogoRef}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ amount: 0.3 }}
+                  transition={{
+                    duration: 0.6,
+                    ease: "easeOut",
+                  }}
+                  className="relative backdrop-blur-[15px] bg-[rgba(255,255,255,0.03)] shadow-[0px_8px_24px_0px_rgba(0,0,0,0.5)] border border-white/10 rounded-3xl p-6 overflow-hidden"
                 >
-                  <path d={svgSomoLogo.p2dc09800} fill="#d7f20d" />
-                  <path d={svgSomoLogo.p310bd00} fill="#d7f20d" />
-                  <path d={svgSomoLogo.p1cd15770} fill="#d7f20d" />
-                  <path d={svgSomoLogo.p1fbcdc00} fill="#d7f20d" />
-                </motion.svg>
-              </motion.div>
+                  {/* Neon top accent line */}
+                  <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#d7f20d]/30 to-transparent" />
+                  {/* Neon bottom accent line */}
+                  <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#d7f20d]/30 to-transparent" />
+                  <motion.svg
+                    viewBox="0 0 853.109 167.667"
+                    className="w-[70px] h-auto"
+                    fill="none"
+                    animate={{ scale: [1, 1.08, 1] }}
+                    transition={{
+                      duration: 2.5,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  >
+                    <path
+                      d={svgSomoLogo.p2dc09800}
+                      fill="#d7f20d"
+                    />
+                    <path
+                      d={svgSomoLogo.p310bd00}
+                      fill="#d7f20d"
+                    />
+                    <path
+                      d={svgSomoLogo.p1cd15770}
+                      fill="#d7f20d"
+                    />
+                    <path
+                      d={svgSomoLogo.p1fbcdc00}
+                      fill="#d7f20d"
+                    />
+                  </motion.svg>
+                </motion.div>
               </TiltCard>
             </motion.div>
           </div>
@@ -932,7 +1158,10 @@ export default function ServicesPage() {
       </section>
 
       {/* ───────────── CTA FINAL: "O Destino" ──────────── */}
-      <section ref={ctaRef} className="relative -mt-8 pb-28 px-6 overflow-hidden">
+      <section
+        ref={ctaRef}
+        className="relative z-[5] -mt-8 pb-28 px-6 overflow-hidden"
+      >
         {/* Converging lines */}
         <div className="absolute inset-0 pointer-events-none hidden md:block">
           {/* Left converging line */}
@@ -951,7 +1180,11 @@ export default function ServicesPage() {
             initial={{ scaleY: 0, opacity: 0 }}
             whileInView={{ scaleY: 1, opacity: 1 }}
             viewport={{ amount: 0.2 }}
-            transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
+            transition={{
+              duration: 1,
+              delay: 0.2,
+              ease: "easeOut",
+            }}
           >
             <div className="w-full h-full bg-gradient-to-b from-[#d7f20d]/20 via-[#d7f20d]/10 to-transparent" />
           </motion.div>
@@ -969,7 +1202,11 @@ export default function ServicesPage() {
 
         {/* Background brand SVG watermark */}
         <div className="absolute inset-0 flex items-center justify-center opacity-[0.02] pointer-events-none">
-          <svg viewBox="0 0 703.19 389.95" className="w-[80%] max-w-[600px]" fill="none">
+          <svg
+            viewBox="0 0 703.19 389.95"
+            className="w-[80%] max-w-[600px]"
+            fill="none"
+          >
             <path
               d={svgAtivo38.p3d1bf00}
               fill="#d7f20d"
@@ -989,19 +1226,25 @@ export default function ServicesPage() {
         >
           <motion.div
             className="w-16 h-10 mx-auto mb-8 opacity-60"
-            animate={ctaInView ? { opacity: [0.4, 0.8, 0.4] } : {}}
+            animate={
+              ctaInView ? { opacity: [0.4, 0.8, 0.4] } : {}
+            }
             transition={{ duration: 3, repeat: Infinity }}
           >
-            <NodeInfinity active={ctaInView} className="w-full h-full" />
+            <NodeInfinity
+              active={ctaInView}
+              className="w-full h-full"
+            />
           </motion.div>
 
           <h2 className="font-['Audiowide',cursive] text-white text-[clamp(28px,4vw,48px)] uppercase tracking-tight mb-6 leading-tight">
-            Não sabe por onde{" "}
-            <span className="text-[#d7f20d]">começar</span>?
+            Qual o próximo nível do seu{" "}
+            <span className="text-[#d7f20d]">negócio</span>?
           </h2>
           <p className="text-white/50 font-['Geist',sans-serif] text-[17px] max-w-xl mx-auto leading-relaxed mb-12">
-            Agende um diagnóstico gratuito e descubra qual combinação de
-            serviços é ideal para o seu negócio crescer no digital.
+            Agende um diagnóstico gratuito e descubra a
+            estratégia ideal para escalar seus resultados no
+            digital.
           </p>
 
           {/* Animated CTA Button with border draw */}

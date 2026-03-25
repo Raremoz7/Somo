@@ -4,23 +4,25 @@ import { motion, AnimatePresence, useMotionValue, useSpring, useTransform, useIn
 import { ArrowUpRight, ArrowRight, ChevronDown, ExternalLink } from "lucide-react";
 import { FadeInImage } from "./ui/FadeInImage";
 import { TiltCard } from "./ui/TiltCard";
+import { portfolioItems, categories } from "./data/portfolioData";
+import { usePageTransition } from "./PageTransitionContext";
 
 // Import SVG assets
 import svgLogoSimplified from "../../imports/svg-f0leoh9j40";
 
-// ─── Portfolio Images (Unsplash) ─────────────────────────────────────
-const imgBrand = "https://images.unsplash.com/photo-1697716400964-049b878e64d6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxicmFuZCUyMGlkZW50aXR5JTIwZGVzaWduJTIwbW9ja3VwJTIwZGFya3xlbnwxfHx8fDE3NzA5ODkwNDB8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral";
-const imgEcommerce = "https://images.unsplash.com/photo-1642143231828-786fbd515a13?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBlY29tbWVyY2UlMjB3ZWJzaXRlJTIwbGFwdG9wJTIwc2NyZWVufGVufDF8fHx8MTc3MTAxNTQ0MHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral";
-const imgSocial = "https://images.unsplash.com/photo-1722172597269-d911054badb9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzb2NpYWwlMjBtZWRpYSUyMG1hcmtldGluZyUyMGNhbXBhaWduJTIwY29sb3JmdWx8ZW58MXx8fHwxNzcxMDE1NDQxfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral";
-const imgMotion = "https://images.unsplash.com/photo-1759393851741-674ee71fb498?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb3Rpb24lMjBncmFwaGljcyUyMGFic3RyYWN0JTIwbmVvbnxlbnwxfHx8fDE3NzEwMTU0NDF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral";
-const imgCorporate = "https://images.unsplash.com/photo-1695634621121-691d54259d37?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb3Jwb3JhdGUlMjB3ZWJzaXRlJTIwZGVzaWduJTIwbW9kZXJuJTIwbWluaW1hbHxlbnwxfHx8fDE3NzEwMTU0NDJ8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral";
-const imgProduct = "https://images.unsplash.com/photo-1712404613042-2f14f02172d7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9kdWN0JTIwcGhvdG9ncmFwaHklMjBzdHVkaW8lMjBkYXJrJTIwYmFja2dyb3VuZHxlbnwxfHx8fDE3NzEwMTU0NDJ8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral";
-const imgRebrand = "https://images.unsplash.com/photo-1649000808933-1f4aac7cad9a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyZWJyYW5kaW5nJTIwZ3JhcGhpYyUyMGRlc2lnbiUyMHBvc3RlcnxlbnwxfHx8fDE3NzEwMTU0NDN8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral";
-const imgApp = "https://images.unsplash.com/photo-1758875569414-120ebc62ada3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2JpbGUlMjBhcHAlMjBkZXNpZ24lMjBoZWFsdGglMjBmaXRuZXNzfGVufDF8fHx8MTc3MTAxNTQ0M3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral";
-const imgVideo = "https://images.unsplash.com/photo-1758774019261-e11c8aadacb2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx2aWRlbyUyMHByb2R1Y3Rpb24lMjBjaW5lbWElMjBjYW1lcmElMjBkYXJrfGVufDF8fHx8MTc3MTAxNTQ0NHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral";
-const imgEditorial = "https://images.unsplash.com/photo-1525813428023-215a7186c776?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlZGl0b3JpYWwlMjBsYXlvdXQlMjBtYWdhemluZSUyMGRlc2lnbnxlbnwxfHx8fDE3NzEwMTU0NDR8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral";
-const imgContent = "https://images.unsplash.com/photo-1759266924877-4b1bc8d0d91d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb3Rpb24lMjBncmFwaGljcyUyMGFic3RyYWN0JTIwbmVvbnxlbnwxfHx8fDE3NzEwMTU0NDF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral";
-const imgFintech = "https://images.unsplash.com/photo-1642143231828-786fbd515a13?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBlY29tbWVyY2UlMjB3ZWJzaXRlJTIwbGFwdG9wJTIwc2NyZWVufGVufDF8fHx8MTc3MTAxNTQ0MHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral";
+// ─── Portfolio Images (reexport from shared data) ─────────────────────
+const imgBrand = portfolioItems.find(p => p.id === "p1")!.image;
+const imgEcommerce = portfolioItems.find(p => p.id === "p2")!.image;
+const imgSocial = portfolioItems.find(p => p.id === "p3")!.image;
+const imgMotion = portfolioItems.find(p => p.id === "p6")!.image;
+const imgCorporate = portfolioItems.find(p => p.id === "p7")!.image;
+const imgProduct = portfolioItems.find(p => p.id === "p4")!.image;
+const imgRebrand = portfolioItems.find(p => p.id === "p8")!.image;
+const imgApp = portfolioItems.find(p => p.id === "p9")!.image;
+const imgVideo = portfolioItems.find(p => p.id === "p11")!.image;
+const imgEditorial = portfolioItems.find(p => p.id === "p12")!.image;
+const imgContent = portfolioItems.find(p => p.id === "p10")!.image;
+const imgFintech = portfolioItems.find(p => p.id === "p5")!.image;
 
 // ─── Animated Counter ────────────────────────────────────────────────
 function AnimatedCounter({ value, suffix = "" }: { value: number; suffix?: string }) {
@@ -49,23 +51,6 @@ function AnimatedCounter({ value, suffix = "" }: { value: number; suffix?: strin
 }
 
 // ─── Data ────────────────────────────────────────────────────────────
-const categories = ["Tudo", "Websites", "Brands", "Social", "Motion"];
-
-const portfolioItems = [
-  { id: "p1", image: imgBrand, title: "Brand Identity — Studio K", category: "Brands", size: "large", client: "Studio K", year: "2024" },
-  { id: "p2", image: imgEcommerce, title: "E-commerce Platform", category: "Websites", size: "medium", client: "TechShop", year: "2024" },
-  { id: "p3", image: imgSocial, title: "Social Campaign", category: "Social", size: "small", client: "Grellsa", year: "2023" },
-  { id: "p4", image: imgProduct, title: "Product Photography", category: "Brands", size: "medium", client: "Ohi Smith", year: "2023" },
-  { id: "p5", image: imgFintech, title: "Landing Page — FinTech", category: "Websites", size: "small", client: "PayFlow", year: "2024" },
-  { id: "p6", image: imgMotion, title: "Motion Graphics Reel", category: "Motion", size: "large", client: "Berlin.", year: "2024" },
-  { id: "p7", image: imgCorporate, title: "Corporate Website", category: "Websites", size: "medium", client: "Human", year: "2023" },
-  { id: "p8", image: imgRebrand, title: "Rebranding Campaign", category: "Brands", size: "small", client: "morfly", year: "2022" },
-  { id: "p9", image: imgApp, title: "App Design — Health", category: "Websites", size: "medium", client: "VitaPlus", year: "2024" },
-  { id: "p10", image: imgContent, title: "Social Media Content", category: "Social", size: "small", client: "KOBE", year: "2023" },
-  { id: "p11", image: imgVideo, title: "Video Production", category: "Motion", size: "large", client: "spl fynx", year: "2024" },
-  { id: "p12", image: imgEditorial, title: "Editorial Design", category: "Brands", size: "medium", client: "Osio.", year: "2023" },
-];
-
 const stats = [
   { value: 60, suffix: "+", label: "Projetos Entregues" },
   { value: 35, suffix: "+", label: "Clientes Ativos" },
@@ -76,7 +61,19 @@ const stats = [
 const services = ["Design", "Desenvolvimento", "SEO", "CRM"];
 
 export default function PortfolioPage() {
-  const [activeCategory, setActiveCategory] = useState("Tudo");
+  const [activeCategory, setActiveCategory] = useState("Todos");
+  const { startTransition } = usePageTransition();
+
+  // Create refs map for portfolio items
+  const cardRefsMap = useRef<Map<string, React.RefObject<HTMLDivElement>>>(new Map());
+  
+  // Get or create ref for a portfolio item
+  const getCardRef = (itemId: string) => {
+    if (!cardRefsMap.current.has(itemId)) {
+      cardRefsMap.current.set(itemId, { current: null });
+    }
+    return cardRefsMap.current.get(itemId)!;
+  };
 
   // Mouse Parallax
   const mouseX = useMotionValue(0);
@@ -96,12 +93,30 @@ export default function PortfolioPage() {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [handleMouseMove]);
 
-  const filtered = activeCategory === "Tudo"
+  const filtered = activeCategory === "Todos"
     ? portfolioItems
     : portfolioItems.filter((item) => item.category === activeCategory);
 
+  // Handler for shared element transition
+  const handleProjectClick = (
+    e: React.MouseEvent,
+    item: typeof portfolioItems[0],
+    cardRef: React.RefObject<HTMLDivElement | null>,
+  ) => {
+    e.preventDefault();
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    startTransition({
+      rect,
+      image: item.image,
+      title: item.title,
+      subtitle: item.client,
+      targetPath: `/portfolio/${item.id}`,
+    });
+  };
+
   return (
-    <div className="overflow-hidden bg-[#0a0a0a]">
+    <div className="relative overflow-hidden bg-[#0a0a0a]" style={{ position: 'relative' }}>
 
       {/* ─── Parallax Background Grid ─── */}
       <motion.div
@@ -150,31 +165,30 @@ export default function PortfolioPage() {
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
           className="relative z-10 text-center px-6 max-w-5xl mx-auto pt-20"
         >
           {/* SOMO Badge */}
-          <motion.div
-            className="inline-flex items-center gap-2 backdrop-blur-xl bg-white/[0.05] border border-[#d7f20d]/20 rounded-full px-4 py-2 mb-8"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
+          <motion.span
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.6,
+              delay: 0.2,
+              ease: "easeOut",
+            }}
+            className="inline-block bg-[#d7f20d]/10 border border-[#d7f20d]/30 text-[#d7f20d] px-5 py-2 rounded-full font-['Audiowide',cursive] text-[12px] uppercase tracking-widest mb-8"
           >
-            <svg viewBox="0 0 703.19 389.95" className="w-[14px] h-[14px] rotate-[135deg]" fill="none">
-              <path d={svgLogoSimplified.p3d1bf00} fill="#d7f20d" stroke="#d7f20d" strokeMiterlimit="10" strokeWidth="35.43" />
-            </svg>
-            <span className="text-[#d7f20d] font-['Audiowide',cursive] text-[11px] uppercase tracking-widest">Portfólio</span>
-          </motion.div>
+            Portfólio SOMO
+          </motion.span>
 
           <h1 className="font-['Audiowide',cursive] text-[clamp(32px,5vw,56px)] text-white uppercase tracking-[-0.03em] leading-[1.15] mb-8 drop-shadow-lg">
-            PROJETOS QUE CONTAM{" "}
-            <span className="text-[#d7f20d]">HISTÓRIAS</span>,{" "}
-            <br className="hidden md:block" />
-            NÃO APENAS <span className="text-[#d7f20d]">RESULTADOS</span>.
+            ONDE A ESTRATÉGIA VIRA{" "}
+            <span className="text-[#d7f20d]">PIXEL</span>.
           </h1>
 
           <p className="text-white/50 font-['Geist',sans-serif] text-[clamp(16px,2vw,20px)] max-w-2xl mx-auto leading-relaxed mb-10">
-            Cada projeto é uma jornada de transformação digital. Explore nosso trabalho e veja como somamos valor a cada marca.
+            Curadoria dos nossos melhores desafios. Não mostramos apenas o que fizemos, mas os problemas complexos de negócio que resolvemos através do design e tecnologia.
           </p>
         </motion.div>
 
@@ -218,63 +232,75 @@ export default function PortfolioPage() {
       {/* ───────────── PORTFOLIO GRID ───────────── */}
       <section className="pb-24 px-6 md:px-16 relative z-10">
         <div className="max-w-7xl mx-auto">
-          <motion.div layout className="columns-1 sm:columns-2 lg:columns-3 gap-5 space-y-5">
+          <motion.div layout="position" className="columns-1 sm:columns-2 lg:columns-3 gap-5 space-y-5">
             <AnimatePresence mode="popLayout">
-              {filtered.map((item) => (
-                <motion.div
-                  layout
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.4 }}
-                  key={item.id}
-                  className="break-inside-avoid"
-                >
-                  <TiltCard tiltMaxX={6} tiltMaxY={6} scale={1.02}>
-                    <div className="rounded-2xl overflow-hidden relative group cursor-pointer backdrop-blur-xl bg-white/[0.03] border border-white/10 hover:border-[#d7f20d]/30 transition-colors duration-300">
-                      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#d7f20d]/20 to-transparent z-10" />
-                      <div className={`${item.size === "large" ? "aspect-[3/4]" : item.size === "medium" ? "aspect-[4/3]" : "aspect-square"} relative overflow-hidden`}>
-                        <FadeInImage
-                          src={item.image}
-                          alt={item.title}
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                        />
-                        {/* Overlay on hover */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <div className="absolute bottom-0 left-0 right-0 p-6">
-                            <div className="flex items-end justify-between">
-                              <div>
-                                <span className="text-[#d7f20d] font-['Audiowide',cursive] text-[11px] uppercase tracking-widest">
-                                  {item.category}
-                                </span>
-                                <h3 className="text-white font-['Geist',sans-serif] text-[18px] mt-1">
-                                  {item.title}
-                                </h3>
-                                <div className="flex items-center gap-3 mt-2">
-                                  <span className="text-white/40 text-[12px] font-['Geist',sans-serif]">{item.client}</span>
-                                  <span className="w-1 h-1 rounded-full bg-[#d7f20d]/40" />
-                                  <span className="text-white/40 text-[12px] font-['Geist',sans-serif]">{item.year}</span>
+              {filtered.map((item) => {
+                const cardRef = getCardRef(item.id);
+                return (
+                  <motion.div
+                    layout="position"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.4 }}
+                    key={item.id}
+                    className="break-inside-avoid"
+                    ref={cardRef as React.RefObject<HTMLDivElement>}
+                    style={{ position: 'relative' }}
+                  >
+                    <Link 
+                      to={`/portfolio/${item.id}`}
+                      onClick={(e) => handleProjectClick(e, item, cardRef)}
+                    >
+                      <TiltCard tiltMaxX={6} tiltMaxY={6} scale={1.02}>
+                        <div 
+                          className="rounded-2xl overflow-hidden relative group cursor-pointer backdrop-blur-xl bg-white/[0.03] border border-white/10 hover:border-[#d7f20d]/30 transition-colors duration-300"
+                        >
+                          <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#d7f20d]/20 to-transparent z-10" />
+                          <div className={`${item.size === "large" ? "aspect-[3/4]" : item.size === "medium" ? "aspect-[4/3]" : "aspect-square"} relative overflow-hidden bg-[#1a1a1a]`}>
+                            <img
+                              src={item.image}
+                              alt={item.title}
+                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                            />
+                            {/* Overlay on hover */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                              <div className="absolute bottom-0 left-0 right-0 p-6">
+                                <div className="flex items-end justify-between">
+                                  <div>
+                                    <span className="text-[#d7f20d] font-['Audiowide',cursive] text-[11px] uppercase tracking-widest">
+                                      {item.category}
+                                    </span>
+                                    <h3 className="text-white font-['Geist',sans-serif] text-[18px] mt-1">
+                                      {item.title}
+                                    </h3>
+                                    <div className="flex items-center gap-3 mt-2">
+                                      <span className="text-white/40 text-[12px] font-['Geist',sans-serif]">{item.client}</span>
+                                      <span className="w-1 h-1 rounded-full bg-[#d7f20d]/40" />
+                                      <span className="text-white/40 text-[12px] font-['Geist',sans-serif]">{item.year}</span>
+                                    </div>
+                                  </div>
+                                  <div className="w-10 h-10 rounded-full bg-[#d7f20d] flex items-center justify-center flex-shrink-0 shadow-[0_0_15px_rgba(215,242,13,0.4)] group-hover:shadow-[0_0_25px_rgba(215,242,13,0.6)] transition-shadow">
+                                    <ArrowUpRight size={18} className="text-[#0a0a0a]" />
+                                  </div>
                                 </div>
-                              </div>
-                              <div className="w-10 h-10 rounded-full bg-[#d7f20d] flex items-center justify-center flex-shrink-0 shadow-[0_0_15px_rgba(215,242,13,0.4)] group-hover:shadow-[0_0_25px_rgba(215,242,13,0.6)] transition-shadow">
-                                <ArrowUpRight size={18} className="text-[#0a0a0a]" />
                               </div>
                             </div>
                           </div>
+                          {/* Bottom info bar */}
+                          <div className="p-4 flex items-center justify-between group-hover:opacity-0 transition-opacity duration-300">
+                            <div>
+                              <p className="text-white/70 font-['Geist',sans-serif] text-[14px]">{item.title}</p>
+                              <p className="text-white/30 font-['Geist',sans-serif] text-[12px] mt-0.5">{item.client} — {item.year}</p>
+                            </div>
+                            <span className="text-[#d7f20d]/50 font-['Audiowide',cursive] text-[10px] uppercase tracking-wider">{item.category}</span>
+                          </div>
                         </div>
-                      </div>
-                      {/* Bottom info bar */}
-                      <div className="p-4 flex items-center justify-between group-hover:opacity-0 transition-opacity duration-300">
-                        <div>
-                          <p className="text-white/70 font-['Geist',sans-serif] text-[14px]">{item.title}</p>
-                          <p className="text-white/30 font-['Geist',sans-serif] text-[12px] mt-0.5">{item.client} — {item.year}</p>
-                        </div>
-                        <span className="text-[#d7f20d]/50 font-['Audiowide',cursive] text-[10px] uppercase tracking-wider">{item.category}</span>
-                      </div>
-                    </div>
-                  </TiltCard>
-                </motion.div>
-              ))}
+                      </TiltCard>
+                    </Link>
+                  </motion.div>
+                );
+              })}
             </AnimatePresence>
           </motion.div>
         </div>

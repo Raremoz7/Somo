@@ -77,7 +77,7 @@ export function TiltCard({
   }, [rotateX, rotateY, cardScale, glareOpacity]);
 
   return (
-    <div className={className} style={{ perspective }}>
+    <div className={className} style={{ perspective, position: 'relative' }}>
       <motion.div
         ref={cardRef}
         onMouseMove={handleMouseMove}

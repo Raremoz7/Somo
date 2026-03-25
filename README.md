@@ -1,7 +1,7 @@
 
-  # Transformar design em site
+  # Somo
 
-  This is a code bundle for Transformar design em site. The original project is available at https://www.figma.com/design/ngmwCEtZCklUEFmsFXTJqq/Transformar-design-em-site.
+  This is a code bundle for Somo. The original project is available at https://www.figma.com/design/ngmwCEtZCklUEFmsFXTJqq/Somo.
 
   ## Running the code
 
